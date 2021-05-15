@@ -1,30 +1,33 @@
 package com.example.project_gunsal
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import com.example.project_gunsal.ui.main.SectionsPagerAdapter
+import com.example.project_gunsal.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
+    val textarr = arrayListOf<String>("오늘의기록", "월간통계", "건강뉴스", "스트레칭", "설정")
+    val iconarr = arrayListOf<Int>(R.drawable.ic_home_select, R.drawable.ic_monthly, R.drawable.ic_news, R.drawable.ic_category, R.drawable.ic_setting)
+
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
-        val fab: FloatingActionButton = findViewById(R.id.fab)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        init()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+
+
+    }
+
+    private fun init() {
+        binding.viewPager.adapter = MyTabFragStateAdapter(this)
+
+        TabLayoutMediator(binding.myTabIconview, binding.viewPager){
+                tab, position ->
+            tab.text = textarr[position]
+            tab.setIcon(iconarr[position])
+        }.attach() //꼭 attach해야함.
     }
 }

@@ -21,5 +21,4 @@ class MyTabFragStateAdapter (fragmentActivity: FragmentActivity): FragmentStateA
         }
     }
 
-
 }
