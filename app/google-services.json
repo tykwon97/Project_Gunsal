@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "424723551695",
+    "firebase_url": "https://project-gunsal-default-rtdb.firebaseio.com",
+    "project_id": "project-gunsal",
+    "storage_bucket": "project-gunsal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424723551695:android:8ef93cebf826998ea8aeba",
+        "android_client_info": {
+          "package_name": "com.example.project_gunsal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424723551695-n5te568fn6el8c4ht178jsdon307pho5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_ENFz62eZtQVAZBTZMl57JN99NvnhOXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424723551695-n5te568fn6el8c4ht178jsdon307pho5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
