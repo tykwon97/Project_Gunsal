@@ -1,4 +1,4 @@
-package com.example.project_gunsal.placeholder
+package com.gs.gunsal.placeholder
 
 import java.util.*
 

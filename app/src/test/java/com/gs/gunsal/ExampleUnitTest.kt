@@ -1,4 +1,4 @@
-package com.example.project_gunsal
+package com.gs.gunsal
 
 import org.junit.Test
 

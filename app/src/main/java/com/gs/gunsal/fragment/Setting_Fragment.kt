@@ -1,11 +1,11 @@
-package com.example.project_gunsal.fragment
+package com.gs.gunsal.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.project_gunsal.databinding.FragmentSettingBinding
+import com.gs.gunsal.databinding.FragmentSettingBinding
 
 class Setting_Fragment : Fragment() {
 

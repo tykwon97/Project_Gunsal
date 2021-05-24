@@ -1,21 +1,21 @@
-package com.example.project_gunsal.fragment
+package com.gs.gunsal.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.project_gunsal.databinding.FragmentTodayViewerBinding
+import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 
-class Today_Viewer_Fragment : Fragment() {
+class Monthly_Statistics_Fragment : Fragment() {
 
-    var binding: FragmentTodayViewerBinding?= null
+    var binding: FragmentMonthlyStatisticsBinding?= null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentTodayViewerBinding.inflate(layoutInflater, container, false)
+        binding = FragmentMonthlyStatisticsBinding.inflate(layoutInflater, container, false)
         return binding!!.root
     }
 
@@ -23,5 +23,4 @@ class Today_Viewer_Fragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
 }

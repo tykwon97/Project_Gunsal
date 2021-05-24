@@ -8,4 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="intro_text">#758A9B</color>
+    <color name="select_color">#2F80ED</color>
+    <color name="walk_color">#FF1E6F</color>
+    <color name="stretching_color">#FFCD1E</color>
+    <color name="unselect_color">#D5DBE0</color>
+    <color name="waterback_color">#C1D9FA</color>
+    <color name="stretchingback_color">#FFF0BB</color>
+    <color name="walkback_color">#FFBBD4</color>
+
+
 </resources>

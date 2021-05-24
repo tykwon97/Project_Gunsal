@@ -1,24 +1,24 @@
-package com.example.project_gunsal.fragment
+package com.gs.gunsal.fragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.project_gunsal.databinding.FragmentStretchingPlayerBinding
-import com.example.project_gunsal.placeholder.PlaceholderContent.PlaceholderItem
+import com.gs.gunsal.databinding.FragmentHealthNewsBinding
+import com.gs.gunsal.placeholder.PlaceholderContent.PlaceholderItem
 
 /**
  * [RecyclerView.Adapter] that can display a [PlaceholderItem].
  * TODO: Replace the implementation with code for your data type.
  */
-class MyPlayerRecyclerViewAdapter(
+class MyNewsRecyclerViewAdapter(
     private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<MyPlayerRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         return ViewHolder(
-            FragmentStretchingPlayerBinding.inflate(
+            FragmentHealthNewsBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -35,7 +35,7 @@ class MyPlayerRecyclerViewAdapter(
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(binding: FragmentStretchingPlayerBinding) :
+    inner class ViewHolder(binding: FragmentHealthNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber
         val contentView: TextView = binding.content

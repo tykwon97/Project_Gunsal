@@ -1,4 +1,4 @@
-package com.example.project_gunsal
+package com.gs.gunsal
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

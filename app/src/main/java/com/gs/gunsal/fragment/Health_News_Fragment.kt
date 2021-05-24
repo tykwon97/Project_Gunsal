@@ -1,4 +1,4 @@
-package com.example.project_gunsal.fragment
+package com.gs.gunsal.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.project_gunsal.R
-import com.example.project_gunsal.placeholder.PlaceholderContent
+import com.gs.gunsal.R
+import com.gs.gunsal.placeholder.PlaceholderContent
 
 /**
  * A fragment representing a list of Items.
  */
-class Stretching_Player_Fragment : Fragment() {
+class Health_News_Fragment : Fragment() {
 
     private var columnCount = 1
 
@@ -30,7 +30,7 @@ class Stretching_Player_Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_stretching__player__list, container, false)
+        val view = inflater.inflate(R.layout.fragment_health__news__list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -39,7 +39,7 @@ class Stretching_Player_Fragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyPlayerRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                adapter = MyNewsRecyclerViewAdapter(PlaceholderContent.ITEMS)
             }
         }
         return view
@@ -53,7 +53,7 @@ class Stretching_Player_Fragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            Stretching_Player_Fragment().apply {
+            Health_News_Fragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }

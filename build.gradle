@@ -1,12 +1,16 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+ext {
+    mpandroidchartVersion = 'v3.1.0'
+    mpandroidchartVersion = mpandroidchartVersion
+}// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.kotlin_version = "1.4.32"
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.1.3"
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.4'
 
