@@ -20,9 +20,9 @@ class Stretching_Player_Fragment : Fragment(){
     lateinit var binding: FragmentStretchingPlayerListBinding
     var start:Long = 0
     lateinit var callback: OnBackPressedCallback
+    var url:List<String> = listOf("https://www.youtube.com/embed/t70t-sklypk", "https://www.youtube.com/embed/t70t-sklypk")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -40,19 +40,20 @@ class Stretching_Player_Fragment : Fragment(){
 
         }
         binding.ddangsOne.setOnClickListener {
-            binding.webView.loadUrl("https://www.youtube.com/embed/t70t-sklypk")
-            binding.webView.visibility = View.VISIBLE
-            binding.linear.visibility = View.GONE
+            changeWebView(0)
             start = System.currentTimeMillis()
         }
         binding.ddangsTwo.setOnClickListener {
-            binding.webView.loadUrl("https://www.youtube.com/embed/swRNeYw1JkY")
-            binding.webView.visibility = View.VISIBLE
-            binding.linear.visibility = View.GONE
+            changeWebView(1)
             start = System.currentTimeMillis()
         }
         // Set the adapter
         return binding!!.root
+    }
+    fun changeWebView(position:Int){
+        binding.webView.loadUrl(url[position])
+        binding.webView.visibility = View.VISIBLE
+        binding.linear.visibility = View.GONE
     }
 
     override fun onAttach(context: Context) {
@@ -64,6 +65,7 @@ class Stretching_Player_Fragment : Fragment(){
                 Log.d("time", ((end-start)/1000).toString())
                 binding.linear.visibility = View.VISIBLE
                 binding.webView.visibility = View.GONE
+                start=0
             }
 
         }

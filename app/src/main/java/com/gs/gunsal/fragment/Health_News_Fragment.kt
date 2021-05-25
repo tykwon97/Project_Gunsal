@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.gs.gunsal.R
-import com.gs.gunsal.placeholder.PlaceholderContent
+import com.gs.gunsal.databinding.FragmentHealthNewsListBinding
 
 /**
  * A fragment representing a list of Items.
@@ -17,6 +14,8 @@ import com.gs.gunsal.placeholder.PlaceholderContent
 class Health_News_Fragment : Fragment() {
 
     private var columnCount = 1
+    lateinit var binding: FragmentHealthNewsListBinding
+    lateinit var callback: OnBackPressedCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +29,30 @@ class Health_News_Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_health__news__list, container, false)
+        binding = FragmentHealthNewsListBinding.inflate(layoutInflater, container, false)
 
+        binding.fab.setOnClickListener {
+            if(binding.floatingViewLinear.visibility == View.GONE){
+                binding.floatingViewLinear.visibility = View.VISIBLE
+            }else{
+                binding.floatingViewLinear.visibility = View.GONE
+            }
+        }
         // Set the adapter
+        /*
         if (view is RecyclerView) {
             with(view) {
-                layoutManager = when {
+                binding.list.layoutManager = when {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyNewsRecyclerViewAdapter(PlaceholderContent.ITEMS)
+                binding.list.adapter = MyNewsRecyclerViewAdapter(PlaceholderContent.ITEMS)
             }
         }
-        return view
+*/
+        return binding.root
     }
+
 
     companion object {
 

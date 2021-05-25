@@ -29,7 +29,7 @@
                 android:text="오늘의 기록"
                 android:layout_gravity="bottom"
                 android:textColor="@color/black"
-                android:textSize="10pt" />
+                android:textSize="8pt" />
             <LinearLayout
                 android:layout_weight="2"
                 android:layout_width="0dp"
@@ -43,11 +43,11 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:text="4,820"
-            android:textSize="10pt"
+            android:textSize="8pt"
             android:paddingRight="20dp"
             android:gravity="right|center"
             android:fontFamily="@font/gmarketsans_bold"
@@ -56,10 +56,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="70dp"
             android:layout_margin="20dp"
             android:padding="10dp"
-            android:elevation="5dp"
+            android:elevation="2dp"
             android:background="@color/white"
             android:orientation="horizontal">
             <ImageView
@@ -78,7 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="10pt"
+                    android:textSize="7pt"
                     android:text="수분섭취"
                     android:textColor="@color/select_color"
                     android:layout_height="wrap_content"/>
@@ -86,7 +86,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="10pt"
+                    android:textSize="8pt"
                     android:gravity="right"
                     android:text="리터"
                     android:textColor="@color/waterback_color"
@@ -95,7 +95,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
                     android:fontFamily="@font/gmarketsans_bold"
-                    android:textSize="10pt"
+                    android:textSize="8pt"
                     android:gravity="right"
                     android:text="0.5"
                     android:textColor="@color/black"
@@ -105,11 +105,11 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="70dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:padding="10dp"
-            android:elevation="5dp"
+            android:elevation="2dp"
             android:background="@color/white"
             android:orientation="horizontal">
             <ImageView
@@ -128,7 +128,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="10pt"
+                    android:textSize="7pt"
                     android:text="만보기"
                     android:textColor="@color/walk_color"
                     android:layout_height="wrap_content"/>
@@ -136,7 +136,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="10pt"
+                    android:textSize="8pt"
                     android:gravity="right"
                     android:text="리터"
                     android:textColor="@color/walkback_color"
@@ -145,7 +145,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
                     android:fontFamily="@font/gmarketsans_bold"
-                    android:textSize="10pt"
+                    android:textSize="8pt"
                     android:gravity="right"
                     android:text="0.5"
                     android:textColor="@color/black"
@@ -155,10 +155,10 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="70dp"
             android:layout_margin="20dp"
             android:padding="10dp"
-            android:elevation="5dp"
+            android:elevation="2dp"
             android:background="@color/white"
             android:orientation="horizontal">
             <ImageView
@@ -177,7 +177,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="10pt"
+                    android:textSize="7pt"
                     android:text="수분섭취"
                     android:textColor="@color/stretching_color"
                     android:layout_height="wrap_content"/>
@@ -185,7 +185,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="10pt"
+                    android:textSize="8pt"
                     android:gravity="right"
                     android:text="리터"
                     android:textColor="@color/stretchingback_color"
@@ -194,7 +194,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
                     android:fontFamily="@font/gmarketsans_bold"
-                    android:textSize="10pt"
+                    android:textSize="8pt"
                     android:gravity="right"
                     android:text="0.5"
                     android:textColor="@color/black"
