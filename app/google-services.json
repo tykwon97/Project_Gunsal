@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "424723551695",
-    "firebase_url": "https://project-gunsal-default-rtdb.firebaseio.com",
-    "project_id": "project-gunsal",
-    "storage_bucket": "project-gunsal.appspot.com"
+    "project_number": "895742237394",
+    "firebase_url": "https://mp-tp-gunsal-default-rtdb.firebaseio.com",
+    "project_id": "mp-tp-gunsal",
+    "storage_bucket": "mp-tp-gunsal.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:424723551695:android:8ef93cebf826998ea8aeba",
+        "mobilesdk_app_id": "1:895742237394:android:9179fff144080f62986b0b",
         "android_client_info": {
-          "package_name": "com.gs.project_gunsal"
+          "package_name": "com.gs.gunsal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "424723551695-n5te568fn6el8c4ht178jsdon307pho5.apps.googleusercontent.com",
+          "client_id": "895742237394-psj4gop0p6uj83fq8uopdeo0d5qnq7tk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gs.gunsal",
+            "certificate_hash": "a3007f93fe3f17ccfbe1d1ee18e7d40bb5d628d4"
+          }
+        },
+        {
+          "client_id": "895742237394-pii5o2pv9ed6ieeri5nr3echckntl46r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_ENFz62eZtQVAZBTZMl57JN99NvnhOXk"
+          "current_key": "AIzaSyBg4v2aOWqXLPS6Wr0KtN65QGQx7lqvMK0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "424723551695-n5te568fn6el8c4ht178jsdon307pho5.apps.googleusercontent.com",
+              "client_id": "895742237394-pii5o2pv9ed6ieeri5nr3echckntl46r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

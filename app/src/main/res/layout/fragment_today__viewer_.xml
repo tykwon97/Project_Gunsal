@@ -1,206 +1,697 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2F2F2"
     tools:context=".fragment.Today_Viewer_Fragment">
 
+    <TextView
+        android:id="@+id/today_write"
+        android:layout_width="121dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="40sp"
+        android:fontFamily="@font/gmarketsans_medium"
+        android:letterSpacing="-0.05"
+        android:text="오늘의 기록"
+        android:textColor="#333232"
+        android:textFontWeight="400"
+        android:textScaleX="0.85"
+        android:textSize="25sp" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="320sp"
+        android:layout_marginTop="48sp"
+        android:src="@drawable/today_icon" />
+
+    <TextView
+        android:id="@+id/today_black_background"
+        android:layout_width="440dp"
+        android:layout_height="1000dp"
+        android:background="#33000000"
+        android:visibility="gone" />
+
     <LinearLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/today_kcal_back"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/bg_custom_textview">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="3"
+                android:id="@+id/today_kcal_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="25dp"
                 android:fontFamily="@font/gmarketsans_medium"
-                android:gravity="left"
-                android:layout_marginBottom="10dp"
-                android:text="오늘의 기록"
-                android:layout_gravity="bottom"
-                android:textColor="@color/black"
-                android:textSize="8pt" />
-            <LinearLayout
-                android:layout_weight="2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:letterSpacing="-0.02"
+                android:text="오늘 소모한 총 칼로리 🎉"
+                android:textColor="#FFFFFF"
+                android:textScaleX="0.85"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/today_kcal_text2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/today_icon" />
-        </LinearLayout>
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="52dp"
+                android:fontFamily="@font/gmarketsans_light"
+                android:letterSpacing="0.15"
+                android:text="잘 하고 있어요. 조금만 더 힘내봐요!"
+                android:textColor="#FFFFFF"
+                android:textScaleX="0.85"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/today_kcal_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="23dp"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text="4,820"
+                android:textColor="#FFFFFF"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/today_water"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_custom_textview_white"
+            android:elevation="10dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/today_water_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/today_water_icon" />
+
+            <TextView
+                android:id="@+id/today_water_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="수분섭취"
+                android:textColor="#2B7FEE"
+                android:textScaleX="0.85"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/today_water_bar_gray"
+                android:layout_width="250dp"
+                android:layout_height="7dp"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="60dp"
+                android:background="#F3F3F3" />
+
+            <TextView
+                android:id="@+id/today_water_bar_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="60dp"
+                android:width="0dp"
+                android:height="7dp"
+                android:background="#2B7FEE" />
+
+            <TextView
+                android:id="@+id/today_water_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="35dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text=""
+                android:textColor="#000000"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/today_water_number_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="40dp"
+                android:layout_toLeftOf="@+id/today_water_number"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="리터"
+                android:textColor="#4D2B7FEE"
+                android:textScaleX="0.85"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/today_walk"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_custom_textview_white"
+            android:elevation="10dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/today_walk_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/today_walk_icon" />
+
+            <TextView
+                android:id="@+id/today_walk_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_centerVertical="false"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="만보기"
+                android:textColor="#FF1862"
+                android:textScaleX="0.85"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/today_walk_bar_gray"
+                android:layout_width="250dp"
+                android:layout_height="7dp"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="60dp"
+                android:background="#F3F3F3" />
+
+            <TextView
+                android:id="@+id/today_walk_bar_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="60dp"
+                android:width="0dp"
+                android:height="7dp"
+                android:background="#FF1862" />
+
+            <TextView
+                android:id="@+id/today_walk_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="35dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text=""
+                android:textColor="#000000"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/today_walk_number_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="40dp"
+                android:layout_toLeftOf="@+id/today_walk_number"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="걸음"
+                android:textColor="#4DFF1862"
+                android:textScaleX="0.85"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/today_strech"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_custom_textview_white"
+            android:elevation="10dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/today_strech_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/today_stretching" />
+
+            <TextView
+                android:id="@+id/today_strech_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="스트레칭"
+                android:textColor="#FFCE16"
+                android:textScaleX="0.85"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/today_strech_bar_gray"
+                android:layout_width="250dp"
+                android:layout_height="7dp"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="60dp"
+                android:background="#F3F3F3" />
+
+            <TextView
+                android:id="@+id/today_strech_bar_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="60dp"
+                android:width="0dp"
+                android:height="7dp"
+                android:background="#FFCE16" />
+
+            <TextView
+                android:id="@+id/today_strech_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="35dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text=""
+                android:textColor="#000000"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/todal_strech_number_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="40dp"
+                android:layout_toLeftOf="@+id/today_strech_number"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="분"
+                android:textColor="#4DFFCE16"
+                android:textScaleX="0.85"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/slide_viewer_water"
+        android:layout_width="410dp"
+        android:layout_height="600dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_custom_pageslide"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:text="4,820"
-            android:textSize="8pt"
-            android:paddingRight="20dp"
-            android:gravity="right|center"
-            android:fontFamily="@font/gmarketsans_bold"
-            android:textColor="@color/white"
-            android:background="@drawable/today_calorie" />
+            android:id="@+id/today_translate_up_date_water"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="35sp"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:letterSpacing="0.05"
+            android:text="May 2021"
+            android:textColor="#000000"
+            android:textFontWeight="400"
+            android:textScaleX="0.85"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_margin="20dp"
-            android:padding="10dp"
-            android:elevation="2dp"
-            android:background="@color/white"
-            android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/today_water_detail"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_custom_textview_white"
+            android:elevation="10dp">
+
             <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:src="@drawable/today_water_icon"/>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="7pt"
-                    android:text="수분섭취"
-                    android:textColor="@color/select_color"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="8pt"
-                    android:gravity="right"
-                    android:text="리터"
-                    android:textColor="@color/waterback_color"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/gmarketsans_bold"
-                    android:textSize="8pt"
-                    android:gravity="right"
-                    android:text="0.5"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/today_water_image_detail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/today_water_icon" />
 
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:padding="10dp"
-            android:elevation="2dp"
-            android:background="@color/white"
-            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/today_water_text_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="33dp"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="수분섭취 평균"
+                android:textColor="#2B7FEE"
+                android:textScaleX="0.85"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/today_water_number_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="28dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text="0.5"
+                android:textColor="#000000"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/today_water_number_text_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="33dp"
+                android:layout_toLeftOf="@+id/today_water_number_detail"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="리터"
+                android:textColor="#4D2B7FEE"
+                android:textScaleX="0.85"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barchart_water_week"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="50dp"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/barchart_accept_water"
+            android:layout_width="360dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/bg_custom_textview">
+
+            <TextView
+                android:id="@+id/barchart_accept_button_water"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:letterSpacing="-0.02"
+                android:text="확인"
+                android:textColor="#FFFFFF"
+                android:textScaleX="0.85"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/slide_viewer_walk"
+        android:layout_width="410dp"
+        android:layout_height="600dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_custom_pageslide"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/today_translate_up_date_walk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="35sp"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:letterSpacing="0.05"
+            android:text="May 2021"
+            android:textColor="#000000"
+            android:textFontWeight="400"
+            android:textScaleX="0.85"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+
+
+        <RelativeLayout
+            android:id="@+id/today_walk_detail"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_custom_textview_white"
+            android:elevation="10dp">
+
             <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:src="@drawable/today_walk_icon"/>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="7pt"
-                    android:text="만보기"
-                    android:textColor="@color/walk_color"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="8pt"
-                    android:gravity="right"
-                    android:text="걸음"
-                    android:textColor="@color/walkback_color"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.7"
-                    android:fontFamily="@font/gmarketsans_bold"
-                    android:textSize="8pt"
-                    android:gravity="right"
-                    android:text="4,820"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/today_walk_image_detail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/today_walk_icon" />
 
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_margin="20dp"
-            android:padding="10dp"
-            android:elevation="2dp"
-            android:background="@color/white"
-            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/today_walk_text_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="33dp"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="만보기 평균"
+                android:textColor="#FF1862"
+                android:textScaleX="0.85"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/today_walk_number_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="28dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text="4820"
+                android:textColor="#000000"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/today_walk_number_text_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="33dp"
+                android:layout_toLeftOf="@+id/today_walk_number_detail"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="걸음"
+                android:textColor="#4DFF1862"
+                android:textScaleX="0.85"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barchart_walk_week"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="50dp"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/barchart_accept_walk"
+            android:layout_width="360dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/bg_custom_textview">
+
+            <TextView
+                android:id="@+id/barchart_accept_button_walk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:letterSpacing="-0.02"
+                android:text="확인"
+                android:textColor="#FFFFFF"
+                android:textScaleX="0.85"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/slide_viewer_strech"
+        android:layout_width="410dp"
+        android:layout_height="600dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_custom_pageslide"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/today_translate_up_date_strech"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="35sp"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:letterSpacing="0.05"
+            android:text="May 2021"
+            android:textColor="#000000"
+            android:textFontWeight="400"
+            android:textScaleX="0.85"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+
+
+        <RelativeLayout
+            android:id="@+id/today_strech_detail"
+            android:layout_width="360dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_custom_textview_white"
+            android:elevation="10dp">
+
             <ImageView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:src="@drawable/today_stretching"/>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="7pt"
-                    android:text="수분섭취"
-                    android:textColor="@color/stretching_color"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gmarketsans_medium"
-                    android:textSize="8pt"
-                    android:gravity="right"
-                    android:text="분"
-                    android:textColor="@color/stretchingback_color"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/gmarketsans_bold"
-                    android:textSize="8pt"
-                    android:gravity="right"
-                    android:text="35"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/today_strech_image_detail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/today_stretching" />
 
-            </LinearLayout>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/today_strech_text_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="85dp"
+                android:layout_marginTop="33dp"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="스트레칭 평균"
+                android:textColor="#FFCE16"
+                android:textScaleX="0.85"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/today_strech_number_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="28dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:text="35"
+                android:textColor="#000000"
+                android:textScaleX="0.85"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/today_strech_number_text_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="33dp"
+                android:layout_toLeftOf="@+id/today_strech_number_detail"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:text="분"
+                android:textColor="#4DFFCE16"
+                android:textScaleX="0.85"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barchart_strech_week"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="50dp"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/barchart_accept_strech"
+            android:layout_width="360dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/bg_custom_textview">
+
+            <TextView
+                android:id="@+id/barchart_accept_button_strech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:letterSpacing="-0.02"
+                android:text="확인"
+                android:textColor="#FFFFFF"
+                android:textScaleX="0.85"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
     </LinearLayout>
 </FrameLayout>

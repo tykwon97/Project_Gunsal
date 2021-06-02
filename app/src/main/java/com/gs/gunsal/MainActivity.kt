@@ -3,6 +3,7 @@ package com.gs.gunsal
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayout
@@ -145,6 +146,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+    fun tabbargone(){
+        binding.myTabIconview.visibility= View.GONE
+    }
+    fun tabbarvisible(){
+        binding.myTabIconview.visibility= View.VISIBLE
     }
 
 }
