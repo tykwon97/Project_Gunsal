@@ -1,4 +1,4 @@
-package com.gs.gunsal.fragment
+package com.gs.fragment
 
 import android.content.Context
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.gs.gunsal.fragment
+package com.gs.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,22 +7,26 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.gs.gunsal.databinding.FragmentHealthNewsListBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * A fragment representing a list of Items.
  */
 class Health_News_Fragment : Fragment() {
 
-    private var columnCount = 1
     lateinit var binding: FragmentHealthNewsListBinding
     lateinit var callback: OnBackPressedCallback
+    lateinit var adapter: MyNewsRecyclerViewAdapter
+    var data1: ArrayList<String> = arrayListOf()
+
+    val scope = CoroutineScope(Dispatchers.IO)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
     }
 
     override fun onCreateView(
@@ -30,42 +34,25 @@ class Health_News_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHealthNewsListBinding.inflate(layoutInflater, container, false)
-
+        initParsing()
         binding.fab.setOnClickListener {
-            if(binding.floatingViewLinear.visibility == View.GONE){
+            if (binding.floatingViewLinear.visibility == View.GONE) {
                 binding.floatingViewLinear.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.floatingViewLinear.visibility = View.GONE
             }
         }
-        // Set the adapter
-        /*
-        if (view is RecyclerView) {
-            with(view) {
-                binding.list.layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                binding.list.adapter = MyNewsRecyclerViewAdapter(PlaceholderContent.ITEMS)
-            }
-        }
-*/
+
         return binding.root
     }
 
 
-    companion object {
+    private fun getnews() {
+        scope.launch {
+        }
+    }
 
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
+    private fun initParsing() {
 
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            Health_News_Fragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
     }
 }

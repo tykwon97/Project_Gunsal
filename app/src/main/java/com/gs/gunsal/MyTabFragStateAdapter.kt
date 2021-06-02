@@ -3,7 +3,7 @@ package com.gs.gunsal
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.gs.gunsal.fragment.*
+import com.gs.fragment.*
 
 class MyTabFragStateAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {

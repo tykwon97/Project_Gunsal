@@ -1,18 +1,13 @@
-package com.gs.gunsal.fragment
+package com.gs.fragment
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gs.gunsal.databinding.FragmentHealthNewsBinding
-import com.gs.gunsal.placeholder.PlaceholderContent.PlaceholderItem
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class MyNewsRecyclerViewAdapter(
-    private val values: List<PlaceholderItem>
+    private val values: List<Mydata>
 ) : RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,20 +24,17 @@ class MyNewsRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
+        holder.title.text = item.title
+        holder.detail.text = item.detail
     }
 
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(binding: FragmentHealthNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
+        val title: TextView = binding.newsTitle
+        val detail: TextView = binding.newsDetail
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
-        }
     }
 
 }
