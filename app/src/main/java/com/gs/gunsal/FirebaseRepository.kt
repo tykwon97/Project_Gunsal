@@ -1,11 +1,9 @@
 package com.gs.gunsal
 
 import android.util.Log
-import com.google.firebase.database.DataSnapshot
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.gs.gunsal.dataClass.BodyDataDetail
-import com.gs.gunsal.dataClass.WalkDataDetail
-import com.gs.gunsal.dataClass.WaterDataDetail
+import com.gs.gunsal.dataClass.*
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -15,21 +13,40 @@ object FirebaseRepository {
     val reference = FirebaseDatabase.getInstance().reference
     var ddd = 0.0
 
-    interface SnapShotListener{
-        fun onSnapShotCaught(snapShot: DataSnapshot)
+    interface OnWaterDataListener{
+        fun onWaterDataCaught(waterDataDetail: WaterDataDetail)
     }
+    var waterDataListener:OnWaterDataListener ?= null
 
-    var snapShotListener:SnapShotListener ?= null
+    interface OnWalkingDataListener{
+        fun onWalkDataCaught(walkDataDetail: WalkDataDetail)
+    }
+    var walkDataListener:OnWalkingDataListener ?= null
+
+    interface OnBodyDataListener{
+        fun onBodyDataCaught(bodyDataDetail: BodyDataDetail)
+    }
+    var bodyDataListener:OnBodyDataListener ?= null
+
+    interface OnTotalDataListener{
+        fun onTotalDataCaught(userData: UserData, bodyData: BodyDataDetail, waterData: WaterDataDetail, walkData: WalkDataDetail)
+    }
+    var totalDataListener:OnTotalDataListener ?= null
+
+    interface OnUserDataListener{
+        fun onUserDataCaught(userData: UserData)
+    }
+    var userDataListener: OnUserDataListener ?= null
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////<User Data>////////////////////////////////////////////////////////////////
 
-    fun enrollUser(userId: String, name: String, nickName: String?){
+    fun enrollUser(userId: String, nickName: String?){
         val user : FUser = if(nickName != null) {
-            FUser(name, nickName)
+            FUser(nickName)
         } else{
-            FUser(name, "null")
+            FUser("null")
         }
         reference.child("users").child(userId).setValue(user)
     }
@@ -59,14 +76,19 @@ object FirebaseRepository {
         }
     }
 
-    fun getDrinkRecentTime(userId: String){
+    fun getDrinkData(userId: String, date: String){
         val currentDate = getCurrentDate()
-        reference.child("water_data").child(userId).child(currentDate).get().addOnSuccessListener { snapShot ->
+        reference.child("water_data").child(userId).child(date).get().addOnSuccessListener { snapShot ->
             if(!snapShot.exists()){
-                snapShotListener!!.onSnapShotCaught(snapShot)
+                val waterData = WaterDataDetail(-1, "ERROR", "00:00:00")
+                waterDataListener!!.onWaterDataCaught(waterData)
             }
             else{
-                snapShotListener!!.onSnapShotCaught(snapShot)
+                val quantity = snapShot.child("quantity").value.toString()
+                val memo = snapShot.child("memo").value.toString()
+                val recentTime = snapShot.child("recent_time").value.toString()
+                val waterData = WaterDataDetail(quantity.toInt(), memo, recentTime)
+                waterDataListener!!.onWaterDataCaught(waterData)
             }
         }
     }
@@ -116,12 +138,16 @@ object FirebaseRepository {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////<Walking Data>/////////////////////////////////////////////////////////////
 
-//    fun getWalkingData(userId: String, date: String, onSuccess: (news: List<Items>) -> Unit,
-//                       onError: () -> Unit) {
-//        var data = WalkDataDetail(-1, -1.0, "")
-//        reference.child("walk_data").child(userId).child(date).get().addOnCompleteListener {
-//        }
-//    }
+    fun getWalkData(userId: String, date: String) {
+        reference.child("walk_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
+            val stepCount = snapShot.child("step_count").value.toString()
+            val memo = snapShot.child("memo").value.toString()
+            val kcalConsumed = snapShot.child("kcal_consumed").value.toString()
+            val walkData = WalkDataDetail(stepCount.toInt(), kcalConsumed.toDouble(), memo)
+            walkDataListener!!.onWalkDataCaught(walkData)
+
+        }
+    }
 
 
     // 처음 add도 update로 대체, 데이터가 존재하지 않으면 자동으로 삽입되게 함
@@ -187,9 +213,20 @@ object FirebaseRepository {
             .removeValue()
     }
 
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////<Body Data>////////////////////////////////////////////////////////////////////
 
+    fun getBodyData(userId: String, date: String) {
+        reference.child("body_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
+            val height = snapShot.child("height").value.toString()
+            val weight = snapShot.child("weight").value.toString()
+            val bodyData = BodyDataDetail(height = height.toDouble(), weight = weight.toDouble())
+            bodyDataListener!!.onBodyDataCaught(bodyData)
+
+        }
+    }
     private fun handleBodyData(userId: String, date: String, bodyData: BodyDataDetail){
         reference.child("body_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
             if(!snapShot.exists()) {
@@ -242,15 +279,55 @@ object FirebaseRepository {
             .child(date)
             .removeValue()
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    fun getUserData(user: FirebaseUser, param: OnUserDataListener){
+    user.email?.let {
+        reference.child("users").child(it).get().addOnSuccessListener { snapShot->
+            val userData = UserData(user.email!!, user.displayName!!)
+            userDataListener!!.onUserDataCaught(userData)
+        }.addOnFailureListener {
+            enrollUser(user.email.toString(), user.displayName.toString())
+            val userData = UserData(user.email!!, user.displayName!!)
+            userDataListener!!.onUserDataCaught(userData)
+        }
+    }
+    }
+
+    fun getTotalData(userId: String, date: String){
+        reference.get().addOnSuccessListener { snapShot->
+            val bodySnapShot = snapShot.child("body_data").child(userId).child(date)
+            val userSnapShot = snapShot.child("users").child(userId)
+            val waterSnapShot = snapShot.child("water_data").child(userId).child(date)
+            val walkSnapShot = snapShot.child("walk_data").child(userId).child(date)
+            val height = bodySnapShot.child("height").value.toString()
+            val weight = bodySnapShot.child("weight").value.toString()
+            val nickName = userSnapShot.child("nick_name").value.toString()
+            val kcalConsumed = walkSnapShot.child("kcal_consumed").value.toString()
+            val walkMemo = walkSnapShot.child("memo").value.toString()
+            val stepCount = walkSnapShot.child("step_count").value.toString()
+            val quantity = waterSnapShot.child("quantity").value.toString()
+            val recentTime = waterSnapShot.child("recent_time").value.toString()
+            val drinkMemo = waterSnapShot.child("memo").value.toString()
+
+            val bodyData = BodyDataDetail(weight = weight.toDouble(), height = height.toDouble())
+            val userData = UserData(userId, nickName)
+            val waterData = WaterDataDetail(quantity.toInt(), drinkMemo, recentTime)
+            val walkData = WalkDataDetail(stepCount.toInt(), kcalConsumed.toDouble(), walkMemo)
+
+            totalDataListener!!.onTotalDataCaught(userData, bodyData, waterData, walkData)
+
+        }
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-     fun getCurrentDate(): String{
+    fun getCurrentDate(): String{
          return LocalDateTime.now(ZoneOffset.of("+9")).format(DateTimeFormatter.ISO_LOCAL_DATE) as String
     }
 
-    private fun getCurrentTime(): String{
+    fun getCurrentTime(): String{
          val temp = LocalDateTime.now(ZoneOffset.of("+9")).format(DateTimeFormatter.ISO_LOCAL_TIME) as String
          var time = ""
          for(s in temp){
@@ -261,30 +338,11 @@ object FirebaseRepository {
         return time
     }
 
-    data class FUser(val name: String, val nickName: String)
+    data class FUser(val nickName: String)
 
     data class FDrinkData(var quantity: Int, val memo: String)
 
-//    fun getTotalData(userId: String): TotalData {
-//        var userData = UserData("FAIL", "FAIL")
-//        FirebaseDatabase.getInstance().getReference("users/${userId}").get().addOnSuccessListener {
-//            userData = it.value as UserData
-//        }
-//        var walkData = listOf(WalkDate(listOf(WalkDataDetail("-999","fail", "-999"))))
-//        FirebaseDatabase.getInstance().getReference("walk_data/${userId}").get().addOnSuccessListener {
-//            walkData = it.value as List<WalkDate>
-//        }
-//        var waterData = listOf(WaterDate(listOf(WaterDataDetail("-999","fail"))))
-//        FirebaseDatabase.getInstance().getReference("water_data/${userId}").get().addOnSuccessListener {
-//            waterData = it.value as List<WaterDate>
-//        }
-//
-//        var bodyData = listOf(BodyDate(listOf(BodyDataDetail("-999","-999"))))
-//        FirebaseDatabase.getInstance().getReference("body_data/${userId}").get().addOnSuccessListener {
-//            bodyData = it.value as List<BodyDate>
-//        }
-//        return TotalData(userId, userData, walkData, waterData, bodyData)
-//    }
+
 
 }
 
