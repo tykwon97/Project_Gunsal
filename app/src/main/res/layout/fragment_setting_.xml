@@ -5,10 +5,183 @@
     android:layout_height="match_parent"
     tools:context=".fragment.Setting_Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="설정"
+            android:layout_marginTop="20dp"
+            android:textSize="12pt"
+            android:textColor="@color/black"
+            android:fontFamily="@font/gmarketsans_medium"
+            />
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="이민호"
+            android:textColor="@color/black"
+            android:layout_marginTop="20dp"
+            android:textSize="10pt"
+            android:fontFamily="@font/gmarketsans_bold"/>
+        <TextView
+            android:id="@+id/user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:textSize="8pt"
+            android:layout_marginTop="5dp"
+            android:text="my_alsgh@naver.com"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="25dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:paddingBottom="25dp"
+            android:background="@color/unselect_color"
+            android:orientation="horizontal">
+            <TextView
+                android:gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="키"
+                android:textSize="9pt"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:layout_weight="1"/>
+            <TextView
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="177cm"
+                android:textSize="11pt"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:layout_weight="1"/>
+            <TextView
+                android:gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="몸무게"
+                android:textSize="9pt"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:layout_weight="1"/>
+            <TextView
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="65kg"
+                android:textSize="11pt"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:elevation="2dp"
+            android:background="@color/white"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/setting_walk"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="15dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:textSize="10pt"
+                android:text="걸음수 알림바 고정"
+                android:fontFamily="@font/gmarketsans_medium"/>
+            <ToggleButton
+                android:id="@+id/walk_toggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_selector"
+                android:textOff=""
+                android:textOn=""
+                android:checked="true"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:elevation="2dp"
+            android:background="@color/white"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/setting_water"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="15dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:textSize="10pt"
+                android:text="물 섭취 알림"
+                android:fontFamily="@font/gmarketsans_medium"/>
+            <ToggleButton
+                android:id="@+id/water_toggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_selector"
+                android:textOff=""
+                android:textOn=""
+                android:checked="true"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/item"
+            android:elevation="2dp"
+            android:background="@color/white"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/setting_profile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:textSize="10pt"
+                android:text="현재 나의 스펙"
+                android:fontFamily="@font/gmarketsans_medium"/>
+            <ImageView
+                android:src="@drawable/setting_info"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

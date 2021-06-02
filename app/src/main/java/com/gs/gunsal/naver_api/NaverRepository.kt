@@ -1,6 +1,5 @@
 package com.ms129.stockPrediction.naverAPI
 
-import android.util.Log
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,7 +25,7 @@ object NaverRepository {
         api.getSearchNews(query = query, display=100)
             .enqueue(object : Callback<ResultGetSearchNews> {
                 override fun onResponse(
-                    call: Call<ResultGetSearchNews>,
+                    call: retrofit2.Call<ResultGetSearchNews>,
                     response: Response<ResultGetSearchNews>
                 ) {
 //                    Log.d("query::", query)

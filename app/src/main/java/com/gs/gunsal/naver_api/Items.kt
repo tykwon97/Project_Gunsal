@@ -1,7 +1,6 @@
 package com.ms129.stockPrediction.naverAPI
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
 data class Items (
     @SerializedName("title") var title: String = "",

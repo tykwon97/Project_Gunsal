@@ -1,4 +1,4 @@
-package com.gs.fragment
+package com.gs.gunsal.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -21,9 +21,6 @@ class Stretching_Player_Fragment : Fragment(){
     var start:Long = 0
     lateinit var callback: OnBackPressedCallback
     var url:List<String> = listOf("https://www.youtube.com/embed/t70t-sklypk", "https://www.youtube.com/embed/t70t-sklypk")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +57,6 @@ class Stretching_Player_Fragment : Fragment(){
         super.onAttach(context)
         callback = object :OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                Log.d("frag", "back")
                 var end = System.currentTimeMillis()
                 Log.d("time", ((end-start)/1000).toString())
                 binding.linear.visibility = View.VISIBLE
@@ -75,20 +71,6 @@ class Stretching_Player_Fragment : Fragment(){
     override fun onDetach() {
         super.onDetach()
         callback.remove()
-    }
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            Stretching_Player_Fragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
     }
 
 }

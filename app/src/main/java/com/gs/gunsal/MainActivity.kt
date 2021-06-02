@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         R.drawable.ic_setting
     )
     lateinit var binding: ActivityMainBinding
-
     val scope = CoroutineScope(Dispatchers.IO)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,26 +42,48 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         binding.viewPager.adapter = MyTabFragStateAdapter(this)
         initIconColor()
-
         TabLayoutMediator(binding.myTabIconview, binding.viewPager) { tab, position ->
             tab.text = textarr[position]
             tab.setIcon(iconarr[position])
         }.attach() //꼭 attach해야함.
-        initParsing()
 
     }
 
-    private operator fun get(apiUrl: String, requestHeaders: Map<String, String>): String? {
-        val con: HttpURLConnection = connect(apiUrl)!!
+    private fun initParsing() {
+        val my_id = "4X7Z074B7gOxj0qI58lo"
+        val password = "q9QIDTlWlG"
+        scope.launch {
+            var text: String? = null
+            text = try {
+                URLEncoder.encode("건강", "UTF-8")
+            } catch (e: UnsupportedEncodingException) {
+                throw RuntimeException("검색어 인코딩 실패", e)
+            }
+            text?.let { Log.i("text", it) }
+            val apiURL =
+                "https://openapi.naver.com/v1/search/news.json?query=$text" // json 결과
+            val requestHeaders: MutableMap<String, String> = HashMap()
+            requestHeaders["X-Naver-Client-Id"] = my_id
+            requestHeaders["X-Naver-Client-Secret"] = password
+            val responseBody: String = get(apiURL, requestHeaders)
+            Log.i("naver", responseBody)
+        }
+    }
+
+
+    private operator fun get(apiUrl: String, requestHeaders: Map<String, String>): String {
+        val con: HttpURLConnection = connect(apiUrl)
         return try {
             con.setRequestMethod("GET")
             for ((key, value) in requestHeaders) {
                 con.setRequestProperty(key, value)
             }
             val responseCode: Int = con.getResponseCode()
+            Log.i("error code", responseCode.toString())
             if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
                 readBody(con.getInputStream())
             } else { // 에러 발생
+                Log.i("error", "error!!!")
                 readBody(con.getErrorStream())
             }
         } catch (e: IOException) {
@@ -72,10 +93,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun connect(apiUrl: String): HttpURLConnection? {
+    private fun connect(apiUrl: String): HttpURLConnection {
         try {
             val url = URL(apiUrl)
-            return url.openConnection() as HttpURLConnection?
+            return url.openConnection() as HttpURLConnection
         } catch (e: MalformedURLException) {
             throw java.lang.RuntimeException("API URL이 잘못되었습니다. : $apiUrl", e)
         } catch (e: IOException) {
@@ -85,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun readBody(body: InputStream): String? {
+    private fun readBody(body: InputStream): String {
         val streamReader = InputStreamReader(body)
         try {
             BufferedReader(streamReader).use { lineReader ->
@@ -94,33 +115,12 @@ class MainActivity : AppCompatActivity() {
                 while (lineReader.readLine().also { line = it } != null) {
                     responseBody.append(line)
                 }
+
+                Log.i("body", responseBody.toString())
                 return responseBody.toString()
             }
         } catch (e: IOException) {
             throw java.lang.RuntimeException("API 응답을 읽는데 실패했습니다.", e)
-        }
-    }
-
-    private fun initParsing() {
-
-        scope.launch {
-            val clientId = "7_3DPjV3CA9l2B_Yvkb0" //애플리케이션 클라이언트 아이디값"
-
-            val clientSecret = "r0F9NhNwxS" //애플리케이션 클라이언트 시크릿값"
-            var text: String? = null
-            text = try {
-                URLEncoder.encode("그린팩토리", "UTF-8")
-            } catch (e: UnsupportedEncodingException) {
-                throw RuntimeException("검색어 인코딩 실패", e)
-            }
-            val apiURL =
-                "https://openapi.naver.com/v1/search/blog?query=$text" // json 결과
-            val requestHeaders: MutableMap<String, String> = HashMap()
-            requestHeaders["X-Naver-Client-Id"] = clientId
-            requestHeaders["X-Naver-Client-Secret"] = clientSecret
-            val responseBody: String = get(apiURL, requestHeaders)!!
-            Log.i("naver", responseBody)
-
         }
     }
 

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:id="@+id/news"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <WebView
+        android:id="@+id/newsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -18,8 +23,6 @@
         app:layoutManager="LinearLayoutManager"
         tools:context=".fragment.Health_News_Fragment"
         tools:listitem="@layout/fragment_health__news_">
-
-
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -31,19 +34,17 @@
         android:backgroundTint="@color/select_color"
         android:scaleType="fitXY"
         android:src="@drawable/ic_news_filter" />
-    <LinearLayout
-        android:id="@+id/floating_View_Linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_gravity="bottom">
-        <Button
-            android:id="@+id/floating_RecyclerView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="@drawable/filtershape"
+            android:id="@+id/gridrecyclerview"
+            android:foregroundGravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </Button>
-
-
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_margin="20dp"
+            android:padding="40dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/news_keyword_item"
+            android:layout_gravity="bottom">
+        </androidx.recyclerview.widget.RecyclerView>
 </FrameLayout>

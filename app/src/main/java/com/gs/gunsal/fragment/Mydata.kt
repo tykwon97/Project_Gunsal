@@ -1,3 +1,3 @@
-package com.gs.fragment
+package com.gs.gunsal.fragment
 
-data class Mydata(var title:String, var detail:String)
+data class Mydata(var title:String)

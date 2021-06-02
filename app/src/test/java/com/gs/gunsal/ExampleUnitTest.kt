@@ -1,4 +1,4 @@
-package com.gs
+package com.gs.gunsal
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

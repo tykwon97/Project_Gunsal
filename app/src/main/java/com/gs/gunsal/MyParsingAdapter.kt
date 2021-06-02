@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.gs.fragment.Mydata
 import com.gs.gunsal.databinding.FragmentHealthNewsBinding
+import com.gs.gunsal.fragment.Mydata
 
 class MyParsingAdapter(val items: ArrayList<Mydata>):RecyclerView.Adapter<MyParsingAdapter.MyViewHolder>() {
 
@@ -30,7 +30,6 @@ class MyParsingAdapter(val items: ArrayList<Mydata>):RecyclerView.Adapter<MyPars
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.binding.newsTitle.text = items[position].title
-        holder.binding.newsDetail.text = items[position].detail
     }
     override fun getItemCount(): Int {
         return items.size

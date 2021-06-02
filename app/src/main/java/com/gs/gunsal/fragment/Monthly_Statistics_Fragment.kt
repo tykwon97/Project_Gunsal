@@ -1,4 +1,4 @@
-package com.gs.fragment
+package com.gs.gunsal.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

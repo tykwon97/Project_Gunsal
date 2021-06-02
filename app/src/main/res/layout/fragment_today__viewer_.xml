@@ -138,16 +138,16 @@
                     android:fontFamily="@font/gmarketsans_medium"
                     android:textSize="8pt"
                     android:gravity="right"
-                    android:text="리터"
+                    android:text="걸음"
                     android:textColor="@color/walkback_color"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:fontFamily="@font/gmarketsans_bold"
                     android:textSize="8pt"
                     android:gravity="right"
-                    android:text="0.5"
+                    android:text="4,820"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"/>
 
@@ -187,7 +187,7 @@
                     android:fontFamily="@font/gmarketsans_medium"
                     android:textSize="8pt"
                     android:gravity="right"
-                    android:text="리터"
+                    android:text="분"
                     android:textColor="@color/stretchingback_color"
                     android:layout_height="wrap_content"/>
                 <TextView
@@ -196,7 +196,7 @@
                     android:fontFamily="@font/gmarketsans_bold"
                     android:textSize="8pt"
                     android:gravity="right"
-                    android:text="0.5"
+                    android:text="35"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"/>
 
