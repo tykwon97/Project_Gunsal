@@ -1,4 +1,4 @@
-package com.gs.gunsal
+package com.gs.gunsal.adapterPackage
 
 import android.view.LayoutInflater
 import android.view.View

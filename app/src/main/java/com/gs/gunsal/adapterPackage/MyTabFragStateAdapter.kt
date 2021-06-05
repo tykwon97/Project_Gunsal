@@ -1,4 +1,4 @@
-package com.gs.gunsal
+package com.gs.gunsal.adapterPackage
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
