@@ -1,4 +1,4 @@
-package com.gs.gunsal.fragment
+package com.gs.gunsal.adapterPackage
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ class MyNewsRecyclerViewAdapter(
     private val values: List<String>
 ) : RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder>() {
 
-    var itemOnClickListener:OnItemClickListener?=null
+    var itemOnClickListener: OnItemClickListener?=null
 
 
     interface OnItemClickListener{

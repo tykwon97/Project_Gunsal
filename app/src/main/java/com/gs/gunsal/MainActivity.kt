@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.gs.gunsal.adapterPackage.MyTabFragStateAdapter
 import com.gs.gunsal.dataClass.WalkDataDetail
 import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.ActivityMainBinding

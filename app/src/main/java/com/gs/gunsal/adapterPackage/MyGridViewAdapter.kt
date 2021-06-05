@@ -1,4 +1,4 @@
-package com.gs.gunsal.fragment
+package com.gs.gunsal.adapterPackage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ private val values: List<String>
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyGridViewAdapter.ViewHolder {
+    ): ViewHolder {
         return ViewHolder(
             NewsKeywordItemBinding.inflate(
                 LayoutInflater.from(parent.context),
