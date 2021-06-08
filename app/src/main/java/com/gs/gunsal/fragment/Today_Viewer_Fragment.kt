@@ -25,8 +25,7 @@ import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.FragmentTodayViewerBinding
 import kotlin.math.floor
 
-class Today_Viewer_Fragment : Fragment() {
-
+class Today_Viewer_Fragment(val userId: String) : Fragment() {
     var binding: FragmentTodayViewerBinding?= null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -166,7 +165,7 @@ class Today_Viewer_Fragment : Fragment() {
 //
 //            }
         val today = FirebaseRepository.getCurrentDate()
-        FirebaseRepository.getTotalData("201710561", today)
+        FirebaseRepository.getTotalData(userId, today)
         //Log.e("today", today)
         FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
             override fun onTotalDataCaught(

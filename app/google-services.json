@@ -15,11 +15,35 @@
       },
       "oauth_client": [
         {
+          "client_id": "895742237394-aspo9i8q2km9bd3hdsr19ot9ujbicb9v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gs.gunsal",
+            "certificate_hash": "9b3e36f1721a225aa9a6e0d09d4bb29f707803e0"
+          }
+        },
+        {
           "client_id": "895742237394-c7r3rd1mlmmff5k8ld21vm336ps1qike.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.gs.gunsal",
             "certificate_hash": "a3007f93fe3f17ccfbe1d1ee18e7d40bb5d628d4"
+          }
+        },
+        {
+          "client_id": "895742237394-r597bt1eolrabmdeea4c6o8q61ojteip.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gs.gunsal",
+            "certificate_hash": "b983f6eaa34b66a256eb7a092d124ecfbda570ae"
+          }
+        },
+        {
+          "client_id": "895742237394-vuf3am9s9ss4rpcad674m1u7qe1a1pgp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gs.gunsal",
+            "certificate_hash": "b6d06b4a02222dd7eb0de96be4578b888047a841"
           }
         },
         {
