@@ -9,6 +9,7 @@ import androidx.core.text.parseAsHtml
 import androidx.recyclerview.widget.RecyclerView
 import com.gs.gunsal.R
 import com.gs.gunsal.databinding.FragmentHealthNewsBinding
+import java.util.*
 
 class MyNewsRecyclerViewAdapter(
     private val values: List<String>
@@ -29,6 +30,7 @@ class MyNewsRecyclerViewAdapter(
         R.drawable.health_13,
         R.drawable.health_14
     )
+    val random = Random()
     var itemOnClickListener:OnItemClickListener?=null
 
 
@@ -52,7 +54,7 @@ class MyNewsRecyclerViewAdapter(
         val item = values[position]
 
         holder.title.text = item.parseAsHtml()
-        holder.image.setImageResource(image[position%14])
+        holder.image.setImageResource(image[random.nextInt(14)])
     }
 
     override fun getItemCount(): Int = values.size

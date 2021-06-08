@@ -1,12 +1,19 @@
 package com.gs.gunsal.adapterPackage
 
+import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.gs.gunsal.fragment.*
+import com.ms129.stockPrediction.naverAPI.Items
+import com.ms129.stockPrediction.naverAPI.NaverRepository
 
 class MyTabFragStateAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
+
+
+
     override fun getItemCount(): Int {
         return 5
     }
@@ -21,7 +28,5 @@ class MyTabFragStateAdapter(fragmentActivity: FragmentActivity) :
             else -> Today_Viewer_Fragment()
         }
     }
-
-
 
 }

@@ -1,8 +1,8 @@
 package com.gs.gunsal.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,15 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
-import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
 import com.gs.gunsal.adapterPackage.MyGridViewAdapter
-import com.gs.gunsal.adapterPackage.MyNewsRecyclerViewAdapter
 import com.gs.gunsal.databinding.FragmentHealthNewsListBinding
 import com.gs.gunsal.databinding.NewsKeywordItemBinding
 import com.ms129.stockPrediction.naverAPI.Items
@@ -34,7 +33,7 @@ class Health_News_Fragment : Fragment() {
     var binding: FragmentHealthNewsListBinding?= null
     var binding2: NewsKeywordItemBinding ?= null
     lateinit var adapter: MyNewsRecyclerViewAdapter
-    lateinit var titleArrayList: ArrayList<String>
+    var titleArrayList = ArrayList<String>()
     lateinit var callback: OnBackPressedCallback
     var searchString:ArrayList<String> ?=null
     var griddata: ArrayList<String> = arrayListOf(
@@ -42,19 +41,29 @@ class Health_News_Fragment : Fragment() {
         "건강식품", "건강", "트레이닝", "헬스", "스트레칭", "보조제"
     )
 
-    private fun changeFragment(fragment: Fragment) {
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.news, fragment)
-            .commit()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHealthNewsListBinding.inflate(layoutInflater, container, false)
         binding2 = NewsKeywordItemBinding.inflate(layoutInflater, container, false)
+        titleArrayList.addAll((activity as MainActivity).titleArrayList)
+        Log.i("list", titleArrayList.toString())
+        adapter = MyNewsRecyclerViewAdapter(titleArrayList)
+        var linkArray = ArrayList<String>()
+        linkArray.addAll((activity as MainActivity).linkArrayList)
+        adapter.itemOnClickListener = object : MyNewsRecyclerViewAdapter.OnItemClickListener{
+            override fun OnItemClick(
+                holder: RecyclerView.ViewHolder,
+                view: View,
+                data: String,
+                position: Int
+            ) {
+                changeWebView(linkArray[position])
+            }
+        }
+        binding!!.list.adapter = adapter
+
         binding!!.newsView.settings.apply {
             javaScriptEnabled = true
             setAppCacheEnabled(true)
@@ -83,6 +92,9 @@ class Health_News_Fragment : Fragment() {
         griddata.forEach {
             filterData.add(MyFilterData("#"+it, false))
         }
+
+
+
         val myadapter = MyGridViewAdapter(filterData)
         myadapter.mListener = object : MyGridViewAdapter.OnItemClickListener {
             override fun onItemClick(
@@ -119,9 +131,7 @@ class Health_News_Fragment : Fragment() {
             binding!!.color.visibility = View.GONE
 
         }
-
         binding!!.gridrecyclerview.adapter = myadapter
-        initNaver()
         return binding!!.root
     }
 
@@ -141,7 +151,6 @@ class Health_News_Fragment : Fragment() {
                 data: String,
                 position: Int
             ) {
-                onAttach(requireContext())
                 changeWebView(list[position].originallink)
             }
         }
@@ -161,7 +170,6 @@ class Health_News_Fragment : Fragment() {
                 data: String,
                 position: Int
             ) {
-                onAttach(requireContext())
                 changeWebView(list[position].originallink)
             }
         }
