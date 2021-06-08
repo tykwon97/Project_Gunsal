@@ -20,6 +20,7 @@ object FirebaseRepository {
 
     interface OnWalkingDataListener{
         fun onWalkDataCaught(walkDataDetail: WalkDataDetail)
+        fun onWalkListCaught(newWalkData: ArrayList<NewWalkData>)
     }
     var walkDataListener:OnWalkingDataListener ?= null
 
@@ -30,11 +31,13 @@ object FirebaseRepository {
 
     interface OnTotalDataListener{
         fun onTotalDataCaught(userData: UserData, bodyData: BodyDataDetail, waterData: WaterDataDetail, walkData: WalkDataDetail)
+        //fun onTotalDataFailed() // 이 함수가 호출될 때면 이미 데이터가 새로 추가된 시점이므로 getTotalData를 다시 호출해주면 됨
     }
     var totalDataListener:OnTotalDataListener ?= null
 
     interface OnUserDataListener{
-        fun onUserDataCaught(userData: UserData)
+        fun onUserDataCaught(userData: UserData, isFirst: Boolean)
+        fun onUserDataUncaught(user: FirebaseUser)
     }
     var userDataListener: OnUserDataListener ?= null
 
@@ -42,18 +45,16 @@ object FirebaseRepository {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////<User Data>////////////////////////////////////////////////////////////////
 
-    fun enrollUser(userId: String, nickName: String?){
-        val user : FUser = if(nickName != null) {
-            FUser(nickName)
-        } else{
-            FUser("null")
-        }
+    fun enrollUser(userId: String, nickName: String){
+        val user = UserData(userId, nickName)
         reference.child("users").child(userId).setValue(user)
     }
 
     fun removeUser(uid: String) {
         reference.child("users").child(uid).removeValue()
-        reference.child("data").child(uid).removeValue()
+        reference.child("walk_data").child(uid).removeValue()
+        reference.child("water_data").child(uid).removeValue()
+        reference.child("body_data").child(uid).removeValue()
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +150,23 @@ object FirebaseRepository {
         }
     }
 
+    fun getWalkDataList(userId: String){
+        val today = getCurrentDate()
+
+        reference.child("walk_data").child(userId).get().addOnSuccessListener { snapShot->
+            val newWalDataList = ArrayList<NewWalkData>()
+            val list = snapShot.children.forEach {
+                val date = it.key.toString()
+                val stepCount = it.child("step_count").value.toString()
+                val memo = it.child("memo").value.toString()
+                val kcalConsumed = it.child("kcal_consumed").value.toString()
+                val newWalkData = NewWalkData(date, stepCount.toInt(), kcalConsumed.toDouble(), memo)
+                newWalDataList.add(newWalkData)
+            }
+            walkDataListener!!.onWalkListCaught(newWalDataList)
+        }
+    }
+
 
     // 처음 add도 update로 대체, 데이터가 존재하지 않으면 자동으로 삽입되게 함
     // + stepCount가 어떤 식으로 들어오는 건지 궁금 (계속 누적되게 가져와지는건지)
@@ -182,8 +200,8 @@ object FirebaseRepository {
                 .setValue(newWalkData)
         }
         else{
-            var stepCount = oldWalkData.step_count + newWalkData.step_count
-            var kcalConsumed = oldWalkData.kcal_consumed + newWalkData.kcal_consumed
+            var stepCount = newWalkData.step_count
+            var kcalConsumed = newWalkData.kcal_consumed
             if(stepCount <= 0) stepCount = 0
             if(kcalConsumed <= 0) kcalConsumed = 0.0
             val sumData = WalkDataDetail(stepCount,
@@ -237,7 +255,7 @@ object FirebaseRepository {
                 val weight = snapShot.child("weight").value.toString()
                 val height = snapShot.child("height").value.toString()
                 val oldBodyData = BodyDataDetail(weight.toDouble(), height.toDouble())
-                        Log.d("getBodyData1","${oldBodyData.height}, ${oldBodyData.weight}")
+                Log.d("getBodyData1","${oldBodyData.height}, ${oldBodyData.weight}")
                 updateBodyCallBack(userId, date, oldBodyData, bodyData)
             }
         }
@@ -279,23 +297,45 @@ object FirebaseRepository {
             .child(date)
             .removeValue()
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-    fun getUserData(user: FirebaseUser, param: OnUserDataListener){
-    user.email?.let {
-        reference.child("users").child(it).get().addOnSuccessListener { snapShot->
-            val userData = UserData(user.email!!, user.displayName!!)
-            userDataListener!!.onUserDataCaught(userData)
+    fun getUserInfo(user: FirebaseUser){
+        reference.child("users").get().addOnSuccessListener { snapShot->
+            val userId = snapShot.child(user.uid).child("user_id").value.toString()
+            val nickName = snapShot.child(user.uid).child("nick_name").value.toString()
+            Log.d("getUserInfo", "$userId, $nickName")
+            if(userId == "null" || nickName == "null"){
+                enrollUser(user.uid, user.displayName.toString())
+                val userData = UserData(userId, nickName)
+                userDataListener!!.onUserDataCaught(userData, true)
+            }
+            else {
+                Log.d("getUserInfo else", "$userId, $nickName")
+                val userData = UserData(userId, nickName)
+                userDataListener!!.onUserDataCaught(userData, false)
+            }
         }.addOnFailureListener {
-            enrollUser(user.email.toString(), user.displayName.toString())
-            val userData = UserData(user.email!!, user.displayName!!)
-            userDataListener!!.onUserDataCaught(userData)
+            enrollUser(user.uid, user.displayName.toString())
+            val userData = UserData(user.uid, user.displayName!!)
+            userDataListener!!.onUserDataUncaught(user)
         }
     }
+
+    fun getUserInfoByID(userId: String){
+        reference.child("users").get().addOnSuccessListener { snapShot->
+            val userId = snapShot.child(userId).child("user_id").value.toString()
+            val nickName = snapShot.child(userId).child("nick_name").value.toString()
+            Log.d("getUserInfo", "$userId, $nickName")
+            val userData = UserData(userId, nickName)
+            userDataListener!!.onUserDataCaught(userData, false)
+        }
     }
 
-    fun getTotalData(userId: String, date: String){
+
+    fun getTotalData(userId: String, date: String) {
         reference.get().addOnSuccessListener { snapShot->
+            //Log.d("snapshot.value",snapShot.value.toString())
+            val dataArray = ArrayList<String>()
             val bodySnapShot = snapShot.child("body_data").child(userId).child(date)
             val userSnapShot = snapShot.child("users").child(userId)
             val waterSnapShot = snapShot.child("water_data").child(userId).child(date)
@@ -309,14 +349,68 @@ object FirebaseRepository {
             val quantity = waterSnapShot.child("quantity").value.toString()
             val recentTime = waterSnapShot.child("recent_time").value.toString()
             val drinkMemo = waterSnapShot.child("memo").value.toString()
-
-            val bodyData = BodyDataDetail(weight = weight.toDouble(), height = height.toDouble())
-            val userData = UserData(userId, nickName)
-            val waterData = WaterDataDetail(quantity.toInt(), drinkMemo, recentTime)
-            val walkData = WalkDataDetail(stepCount.toInt(), kcalConsumed.toDouble(), walkMemo)
-
-            totalDataListener!!.onTotalDataCaught(userData, bodyData, waterData, walkData)
-
+            dataArray.apply {
+                add(height)
+                add(weight)
+                add(nickName)
+                add(kcalConsumed)
+                add(walkMemo)
+                add(stepCount)
+                add(quantity)
+                add(recentTime)
+                add(drinkMemo)
+            }
+            var i = 0
+            val nullIndexArray = ArrayList<Int>()
+            for(s in dataArray){
+                if(s == "null" || s == "NULL" || s == null){
+                    nullIndexArray.add(i)
+                    Log.e("getTotalData", "NULL index: $i")
+                }
+                i += 1
+            }
+            if(nullIndexArray.size == 0) {
+                Log.d("getTotalData", "dataLoad SUCCESS")
+                val bodyData = BodyDataDetail(weight = weight.toDouble(), height = height.toDouble())
+                val userData = UserData(userId, nickName)
+                val waterData = WaterDataDetail(quantity.toInt(), drinkMemo, recentTime)
+                val walkData = WalkDataDetail(stepCount.toInt(), kcalConsumed.toDouble(), walkMemo)
+                totalDataListener!!.onTotalDataCaught(userData, bodyData, waterData, walkData)
+            }
+            else{
+                val time = getCurrentTime()
+                Log.e("getTotalData", "dataLoadFAIL, System progress Inserting default data...")
+                var flagBody = true
+                var flagWalk = true
+                var flagWater = true
+                for(index in nullIndexArray){
+                    when(index){
+                        0, 1 -> {
+                            if(flagBody){
+                                Log.d("getTotalData", "updateBodyData")
+                                updateBodyData(userId, date ,0.0, 0.0)
+                                flagBody = false
+                            }
+                        }
+                        2->{}
+                        3, 4, 5 -> {
+                            if(flagWalk) {
+                                Log.d("getTotalData", "updateWalkingData")
+                                updateWalkingData(userId, date, 0, 0.0, "")
+                                flagWalk = false
+                            }
+                        }
+                        6, 7, 8 -> {
+                            if(flagWater) {
+                                Log.d("getTotalData", "updateDrinkData")
+                                updateDrinkData(userId, date, time, 0, "")
+                                flagWater = false
+                            }
+                        }
+                    }
+                }
+                getTotalData(userId, date)
+            }
         }
     }
 
@@ -324,23 +418,22 @@ object FirebaseRepository {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     fun getCurrentDate(): String{
-         return LocalDateTime.now(ZoneOffset.of("+9")).format(DateTimeFormatter.ISO_LOCAL_DATE) as String
+        return LocalDateTime.now(ZoneOffset.of("+9")).format(DateTimeFormatter.ISO_LOCAL_DATE) as String
     }
 
     fun getCurrentTime(): String{
-         val temp = LocalDateTime.now(ZoneOffset.of("+9")).format(DateTimeFormatter.ISO_LOCAL_TIME) as String
-         var time = ""
-         for(s in temp){
-             if(s == '.') break;
-             time += s
-         }
+        val temp = LocalDateTime.now(ZoneOffset.of("+9")).format(DateTimeFormatter.ISO_LOCAL_TIME) as String
+        var time = ""
+        for(s in temp){
+            if(s == '.') break;
+            time += s
+        }
         //Log.d("TIME::", time)
         return time
     }
 
     data class FUser(val nickName: String)
 
-    data class FDrinkData(var quantity: Int, val memo: String)
 
 
 

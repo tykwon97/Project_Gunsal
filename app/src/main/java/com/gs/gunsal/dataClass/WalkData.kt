@@ -15,3 +15,10 @@ data class WalkDataDetail(
     val kcal_consumed: Double,
     val memo: String
 ): Serializable
+
+data class NewWalkData(
+    val date: String,
+    val step_count: Int,
+    val kcal_consumed: Double,
+    val memo: String
+): Serializable

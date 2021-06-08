@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.gs.gunsal.adapterPackage.MyTabFragStateAdapter
+import com.gs.gunsal.dataClass.NewWalkData
 import com.gs.gunsal.dataClass.WalkDataDetail
 import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.ActivityMainBinding
@@ -29,6 +30,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class MainActivity : AppCompatActivity() {
+    lateinit var userId : String
+    lateinit var nickName : String
     val textarr = arrayListOf<String>("오늘의기록", "월간통계", "건강뉴스", "스트레칭", "설정")
     val iconarr = arrayListOf<Int>(
         R.drawable.ic_home,
@@ -49,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         initNaver()
         setContentView(binding.root)
+        userId = intent.getStringExtra("USER_ID").toString()
+
         init()
 
         if(walkalarm ==true){
@@ -71,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        binding.viewPager.adapter = MyTabFragStateAdapter(this)
+        binding.viewPager.adapter = MyTabFragStateAdapter(this, userId)
         initIconColor()
         TabLayoutMediator(binding.myTabIconview, binding.viewPager) { tab, position ->
             tab.text = textarr[position]
@@ -108,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     //알림부분~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     fun walkNotification(){//만보기 알림부분
 
-        FirebaseRepository.getWalkData("201710561", "2021-05-24")//FirebaseRepository.getCurrentDate())
+        //FirebaseRepository.getWalkData("201710561", "2021-05-24")//FirebaseRepository.getCurrentDate())
         FirebaseRepository.walkDataListener = object: FirebaseRepository.OnWalkingDataListener{
 
             override fun onWalkDataCaught(walkDataDetail: WalkDataDetail) {
@@ -159,6 +164,9 @@ class MainActivity : AppCompatActivity() {
                 manager.createNotificationChannel(notificationChannel)
                 val notification = builder.build()
                 manager.notify(1, notification)
+            }
+
+            override fun onWalkListCaught(newWalkData: ArrayList<NewWalkData>) {
             }
         }
     }
