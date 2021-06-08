@@ -53,7 +53,7 @@
                     android:textSize="8pt" />
             </LinearLayout>
             <ImageView
-                android:id="@+id/logout"
+                android:id="@+id/log_out"
                 android:layout_width="0dp"
                 android:layout_gravity="bottom"
                 android:layout_height="wrap_content"
@@ -81,7 +81,6 @@
                 android:textSize="9pt" />
 
             <TextView
-                android:id="@+id/height_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -102,7 +101,6 @@
                 android:textSize="9pt" />
 
             <TextView
-                android:id="@+id/weight_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
