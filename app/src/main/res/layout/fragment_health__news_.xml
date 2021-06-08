@@ -18,6 +18,11 @@
             android:layout_height="200dp"
             android:scaleType="fitXY"
             />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#80000000"
+            />
 
         <TextView
             android:id="@+id/news_title"
@@ -27,7 +32,7 @@
             android:textSize="10pt"
             android:gravity="left"
             android:layout_gravity="bottom"
-            android:textColor="@color/black" />
+            android:textColor="@color/white" />
 
     </FrameLayout>
 </LinearLayout>

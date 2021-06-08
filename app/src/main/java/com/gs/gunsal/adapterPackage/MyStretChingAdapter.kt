@@ -43,6 +43,7 @@ class MyStretChingAdapter() : RecyclerView.Adapter<MyStretChingAdapter.ViewHolde
             javaScriptEnabled = true
             pluginState = WebSettings.PluginState.ON
             useWideViewPort = true
+
             loadWithOverviewMode = true
         }
         holder.webView.loadUrl(url[position])
