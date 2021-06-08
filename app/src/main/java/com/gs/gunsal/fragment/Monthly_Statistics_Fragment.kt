@@ -29,14 +29,8 @@ class Monthly_Statistics_Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMonthlyStatisticsBinding.inflate(layoutInflater, container, false)
-        return binding!!.root
-    }
 
-    var isPageOpen = false
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val result = arrayOf("2021,04,01", "2021,04,10", "2021,04,18", "2021,04,20")
-        ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor())
+
         val translatedown = AnimationUtils.loadAnimation(getContext(), R.anim.translate_down)
         val translateup = AnimationUtils.loadAnimation(getContext(), R.anim.translate_up)
 
@@ -44,7 +38,7 @@ class Monthly_Statistics_Fragment : Fragment() {
             monthlyTextColor.bringToFront()
             monthly.state().edit()
                 .setMinimumDate(CalendarDay.from(2021, 0, 1))
-                .setMaximumDate(CalendarDay.from(2021,6,24))
+                .setMaximumDate(CalendarDay.from(2021, 6, 24))
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit()
             monthly.setOnDateChangedListener { widget, date, selected ->
@@ -73,7 +67,36 @@ class Monthly_Statistics_Fragment : Fragment() {
                 }
             }
         }
+
+
+        return binding!!.root
     }
+
+    var isPageOpen = false
+    override fun onDetach() {
+        super.onDetach()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val result = arrayOf("2021,04,01", "2021,04,10", "2021,04,18", "2021,04,20")
+        ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor())
+    }
+    override fun onPause() {
+        super.onPause()
+
+        binding.apply {
+            slideViewer.visibility = View.GONE
+            todayBlackBackground.visibility = View.GONE
+            //slideViewer.startAnimation(translatedown)
+            (activity as MainActivity).tabbarvisible()
+            isPageOpen = false
+            monthly.visibility = View.VISIBLE
+            monthlyTextColor.visibility = View.VISIBLE
+        }
+
+    }
+
 
     inner class ApiSimulator internal constructor(var Time_Result: Array<String>) :
         AsyncTask<Void?, Void?, List<CalendarDay>>() {
