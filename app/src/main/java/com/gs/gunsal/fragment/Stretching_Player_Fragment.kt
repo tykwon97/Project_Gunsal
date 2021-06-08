@@ -10,58 +10,39 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import com.gs.gunsal.adapterPackage.MyStretChingAdapter
 import com.gs.gunsal.databinding.FragmentStretchingPlayerListBinding
 
 /**
  * A fragment representing a list of Items.
  */
-class Stretching_Player_Fragment : Fragment(){
+class Stretching_Player_Fragment : Fragment() {
 
     lateinit var binding: FragmentStretchingPlayerListBinding
-    var start:Long = 0
+    var start: Long = 0
     lateinit var callback: OnBackPressedCallback
-    var url:List<String> = listOf("https://www.youtube.com/embed/t70t-sklypk", "https://www.youtube.com/embed/t70t-sklypk")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        start = System.currentTimeMillis()
         binding = FragmentStretchingPlayerListBinding.inflate(layoutInflater, container, false)
-        binding.webView.webChromeClient = WebChromeClient()
-        binding.webView.settings.apply {
-            javaScriptEnabled = true
-            setAppCacheEnabled(true)
-            pluginState = WebSettings.PluginState.ON
-            useWideViewPort = true
-            loadWithOverviewMode = true
-
-        }
-        binding.ddangsOne.setOnClickListener {
-            changeWebView(0)
-            start = System.currentTimeMillis()
-        }
-        binding.ddangsTwo.setOnClickListener {
-            changeWebView(1)
-            start = System.currentTimeMillis()
-        }
-        // Set the adapter
+        binding.stretchingView.adapter = MyStretChingAdapter()
         return binding!!.root
     }
-    fun changeWebView(position:Int){
+
+    /*fun changeWebView(position: Int) {
         binding.webView.loadUrl(url[position])
         binding.webView.visibility = View.VISIBLE
         binding.linear.visibility = View.GONE
-    }
+    }*/
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        callback = object :OnBackPressedCallback(true){
+        callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                var end = System.currentTimeMillis()
-                Log.d("time", ((end-start)/1000).toString())
-                binding.linear.visibility = View.VISIBLE
-                binding.webView.visibility = View.GONE
-                start=0
             }
 
         }
@@ -71,6 +52,19 @@ class Stretching_Player_Fragment : Fragment(){
     override fun onDetach() {
         super.onDetach()
         callback.remove()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("onResume", "onResume")
+        start = System.currentTimeMillis()
+    }
+    override fun onPause() {
+        super.onPause()
+        Log.i("onDetach", "onDetach")
+        var end = System.currentTimeMillis()
+        Log.i("onDetach", ((end - start) / 1000).toString())
+        start = 0
     }
 
 }

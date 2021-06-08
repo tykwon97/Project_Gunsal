@@ -2,32 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/click"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:layout_height="wrap_content"
     android:layout_marginBottom="30dp"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/news_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ddangs_one" />
+            />
 
         <TextView
             android:id="@+id/news_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="무조건 살빠지는 걷기 다이어트"
             android:fontFamily="@font/gmarketsans_bold"
             android:textSize="10pt"
             android:gravity="left"
             android:layout_gravity="bottom"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
     </FrameLayout>
 </LinearLayout>

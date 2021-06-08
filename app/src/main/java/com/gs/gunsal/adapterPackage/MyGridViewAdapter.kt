@@ -1,20 +1,20 @@
-package com.gs.gunsal.fragment
+package com.gs.gunsal.adapterPackage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gs.gunsal.databinding.NewsKeywordItemBinding
+import com.gs.gunsal.fragment.MyFilterData
 
-class MyGridViewAdapter(
-private val values: List<String>
+class MyGridViewAdapter(var values: ArrayList<MyFilterData>
 ) : RecyclerView.Adapter<MyGridViewAdapter.ViewHolder>() {
 
     var mListener: OnItemClickListener? = null
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyGridViewAdapter.ViewHolder {
+    ): ViewHolder {
         return ViewHolder(
             NewsKeywordItemBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -24,7 +24,7 @@ private val values: List<String>
         )
     }
     interface OnItemClickListener {
-        fun onItemClick(v: ViewHolder?, pos: Int)
+        fun onItemClick(v: ViewHolder?, pos: Int, myFilterData: MyFilterData)
     }
 
 
@@ -38,14 +38,14 @@ private val values: List<String>
         }
         init{
             binding.item.setOnClickListener {
-                mListener?.onItemClick(this, adapterPosition)
+                mListener?.onItemClick(this, adapterPosition, values[adapterPosition])
             }
         }
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item = values[position].title
         holder.title.text = item
     }
 }

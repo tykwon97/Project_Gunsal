@@ -2,6 +2,7 @@ package com.gs.gunsal.fragment
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,13 +11,14 @@ import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.gs.gunsal.R
+import com.gs.gunsal.adapterPackage.MyGridViewAdapter
+import com.gs.gunsal.adapterPackage.MyNewsRecyclerViewAdapter
 import com.gs.gunsal.databinding.FragmentHealthNewsListBinding
 import com.gs.gunsal.databinding.NewsKeywordItemBinding
 import com.ms129.stockPrediction.naverAPI.Items
@@ -34,13 +36,11 @@ class Health_News_Fragment : Fragment() {
     lateinit var adapter: MyNewsRecyclerViewAdapter
     lateinit var titleArrayList: ArrayList<String>
     lateinit var callback: OnBackPressedCallback
-    var data1: ArrayList<String> = arrayListOf()
+    var searchString:ArrayList<String> ?=null
     var griddata: ArrayList<String> = arrayListOf(
-        "#운동", "#다이어트_음식", "#다이어트",
-        "#건강식품", "#건강", "#트레이닝", "#헬스", "#스트레칭", "#보조제"
+        "운동", "다이어트_음식", "다이어트",
+        "건강식품", "건강", "트레이닝", "헬스", "스트레칭", "보조제"
     )
-
-    val scope = CoroutineScope(Dispatchers.IO)
 
     private fun changeFragment(fragment: Fragment) {
         parentFragmentManager
@@ -54,42 +54,69 @@ class Health_News_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHealthNewsListBinding.inflate(layoutInflater, container, false)
-        binding!!.newsView.webChromeClient = WebChromeClient()
+        binding2 = NewsKeywordItemBinding.inflate(layoutInflater, container, false)
         binding!!.newsView.settings.apply {
             javaScriptEnabled = true
             setAppCacheEnabled(true)
             pluginState = WebSettings.PluginState.ON
             useWideViewPort = true
             loadWithOverviewMode = true
-
         }
-        binding!!.newsView.webViewClient  = WebViewClient()
-        if (binding!!.gridrecyclerview is RecyclerView) {
-            with(binding!!.gridrecyclerview) {
-
-            }
-        }
+        binding!!.newsView.webChromeClient = WebChromeClient()
         binding!!.fab.setOnClickListener {
             if (binding!!.gridrecyclerview.visibility == View.GONE) {
+                binding!!.color.visibility = View.VISIBLE
+                searchString = ArrayList()
                 binding!!.gridrecyclerview.visibility = View.VISIBLE
-                binding!!.news.setBackgroundColor(Color.parseColor("#D5DBE0"))
+                binding!!.gridtext.visibility = View.VISIBLE
+                binding!!.filter.visibility = View.VISIBLE
             } else {
                 binding!!.gridrecyclerview.visibility = View.GONE
-                binding!!.news.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                binding!!.color.visibility = View.GONE
+                binding!!.gridtext.visibility = View.GONE
+                binding!!.filter.visibility = View.GONE
             }
         }
         binding!!.gridrecyclerview.layoutManager =
             StaggeredGridLayoutManager(3, LinearLayoutManager.VERTICAL)
-        val myadapter = MyGridViewAdapter(griddata)
+        var filterData = ArrayList<MyFilterData>()
+        griddata.forEach {
+            filterData.add(MyFilterData("#"+it, false))
+        }
+        val myadapter = MyGridViewAdapter(filterData)
         myadapter.mListener = object : MyGridViewAdapter.OnItemClickListener {
-            override fun onItemClick(v: MyGridViewAdapter.ViewHolder?, pos: Int) {
-                Toast.makeText(
-                    context,
-                    "my item is " + v?.title?.text.toString() + "position is " + pos.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
-                binding!!.gridrecyclerview.visibility = View.GONE
+            override fun onItemClick(
+                v: MyGridViewAdapter.ViewHolder?,
+                pos: Int,
+                myFilterData: MyFilterData
+            ) {
+                if(!myFilterData.is_checked){
+                    searchString!!.add(myFilterData.title)
+                    v!!.title.setTextColor(Color.parseColor("#FFFFFF"))
+                    v!!.title.setBackgroundResource(R.drawable.round_shape)
+                    filterData[pos].is_checked = true
+                }else{
+                    searchString!!.remove(myFilterData.title)
+                    v!!.title.setTextColor(Color.parseColor("#000000"))
+                    v!!.title.setBackgroundResource(R.drawable.unselectshape)
+                    filterData[pos].is_checked = false
+                }
             }
+
+        }
+        binding!!.filter.setOnClickListener {
+            var search:String = ""
+            searchString!!.forEach {
+                search+=it+","
+            }
+            if(search.equals("")){
+                search = "건강"
+            }
+            NaverRepository.getSearchNews(search, ::onReSearchNewsFetched, ::onError)
+            binding!!.gridrecyclerview.visibility = View.GONE
+            binding!!.gridtext.visibility = View.GONE
+            binding!!.filter.visibility = View.GONE
+            binding!!.color.visibility = View.GONE
 
         }
 
@@ -102,8 +129,23 @@ class Health_News_Fragment : Fragment() {
         NaverRepository.getSearchNews("건강", ::onSearchNewsFetched, ::onError)
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    fun onReSearchNewsFetched(list: List<Items>){
+        titleArrayList.clear()
+        for(n in list){
+            titleArrayList.add(n.title)
+        }
+        adapter.itemOnClickListener = object : MyNewsRecyclerViewAdapter.OnItemClickListener{
+            override fun OnItemClick(
+                holder: RecyclerView.ViewHolder,
+                view: View,
+                data: String,
+                position: Int
+            ) {
+                onAttach(requireContext())
+                changeWebView(list[position].originallink)
+            }
+        }
+        adapter.notifyDataSetChanged()
     }
     fun onSearchNewsFetched(list: List<Items>) {
         titleArrayList = ArrayList<String>()

@@ -2,15 +2,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:id="@+id/news"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <WebView
         android:id="@+id/newsView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -18,12 +19,9 @@
         android:name="com.example.project_gunsal.Health_News_Fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context=".fragment.Health_News_Fragment"
-        tools:listitem="@layout/fragment_health__news_">
-    </androidx.recyclerview.widget.RecyclerView>
+        tools:listitem="@layout/fragment_health__news_"></androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -34,17 +32,65 @@
         android:backgroundTint="@color/select_color"
         android:scaleType="fitXY"
         android:src="@drawable/ic_news_filter" />
-        <androidx.recyclerview.widget.RecyclerView
-            android:background="@drawable/filtershape"
-            android:id="@+id/gridrecyclerview"
-            android:foregroundGravity="center"
+
+    <LinearLayout
+        android:id="@+id/color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_margin="20dp"
-            android:padding="40dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:listitem="@layout/news_keyword_item"
-            android:layout_gravity="bottom">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridrecyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/filtershape"
+                android:foregroundGravity="center"
+                android:paddingTop="30dp"
+                android:paddingBottom="80dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/news_keyword_item"></androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/gridtext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:gravity="center"
+                android:text="키워드 선택"
+                android:textColor="@color/black"
+                android:textSize="8pt"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/round_shape"
+                android:fontFamily="@font/gmarketsans_bold"
+                android:gravity="center"
+                android:text="확인"
+                android:textColor="@color/white"
+                android:textSize="8pt"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
 </FrameLayout>
