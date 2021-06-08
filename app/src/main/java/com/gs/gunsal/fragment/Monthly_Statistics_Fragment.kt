@@ -11,12 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.gs.gunsal.EventDecorator
 import com.gs.gunsal.MainActivity
-import com.gs.gunsal.OneDayDecorator
 import com.gs.gunsal.R
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -79,8 +77,12 @@ class Monthly_Statistics_Fragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val result = arrayOf("2021,04,01", "2021,04,10", "2021,04,18", "2021,04,20")
-        ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor())
+        val result = arrayOf("2021,06,01", "2021,06,10", "2021,06,19", "2021,06,21")
+        val result2 = arrayOf("2021,06,12", "2021,06,14", "2021,06,16", "2021,06,24")
+        val result3 = arrayOf("2021,06,05", "2021,06,15", "2021,06,18", "2021,06,20")
+        ApiSimulator(result, ContextCompat.getColor(requireContext(), R.color.select_color)).executeOnExecutor(Executors.newSingleThreadExecutor())
+        ApiSimulator(result2, ContextCompat.getColor(requireContext(), R.color.stretching_color)).executeOnExecutor(Executors.newSingleThreadExecutor())
+        ApiSimulator(result3, ContextCompat.getColor(requireContext(), R.color.walk_color)).executeOnExecutor(Executors.newSingleThreadExecutor())
     }
     override fun onPause() {
         super.onPause()
@@ -94,11 +96,10 @@ class Monthly_Statistics_Fragment : Fragment() {
             monthly.visibility = View.VISIBLE
             monthlyTextColor.visibility = View.VISIBLE
         }
-
     }
 
 
-    inner class ApiSimulator internal constructor(var Time_Result: Array<String>) :
+    inner class ApiSimulator internal constructor(var Time_Result: Array<String>, val color: Int) :
         AsyncTask<Void?, Void?, List<CalendarDay>>() {
         override fun doInBackground(vararg params: Void?): List<CalendarDay> {
             try {
@@ -113,7 +114,7 @@ class Monthly_Statistics_Fragment : Fragment() {
             /*월은 0이 1월 년,일은 그대로*/
             //string 문자열인 Time_Result 을 받아와서 ,를 기준으로짜르고 string을 int 로 변환
             for (i in Time_Result.indices) {
-                val day: CalendarDay = CalendarDay.from(calendar)
+                val day= CalendarDay.from(calendar)
                 val time = Time_Result[i].split(",").toTypedArray()
                 val year = time[0].toInt()
                 val month = time[1].toInt()
@@ -123,6 +124,7 @@ class Monthly_Statistics_Fragment : Fragment() {
             }
             return dates
         }
+        var data = intArrayOf(1,2,0,1)
 
         override fun onPostExecute(calendarDays: List<CalendarDay>) {
             super.onPostExecute(calendarDays)
@@ -131,7 +133,7 @@ class Monthly_Statistics_Fragment : Fragment() {
             }
             binding.monthly.addDecorator(
                 EventDecorator(
-                    ContextCompat.getColor(context!!, R.color.select_color),
+                    color,
                     calendarDays,
                     context!!
                 )

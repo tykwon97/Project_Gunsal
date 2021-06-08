@@ -28,7 +28,21 @@ class MyNewsRecyclerViewAdapter(
         R.drawable.health_11,
         R.drawable.health_12,
         R.drawable.health_13,
-        R.drawable.health_14
+        R.drawable.health_14,
+        R.drawable.health_15,
+        R.drawable.health_16,
+        R.drawable.health_17,
+        R.drawable.health_18,
+        R.drawable.health_19,
+        R.drawable.health_20,
+        R.drawable.health_21,
+        R.drawable.health_22,
+        R.drawable.health_23,
+        R.drawable.health_24,
+        R.drawable.health_25,
+        R.drawable.health_26,
+        R.drawable.health_27,
+        R.drawable.health_28
     )
     val random = Random()
     var itemOnClickListener:OnItemClickListener?=null
@@ -54,7 +68,7 @@ class MyNewsRecyclerViewAdapter(
         val item = values[position]
 
         holder.title.text = item.parseAsHtml()
-        holder.image.setImageResource(image[random.nextInt(14)])
+        holder.image.setImageResource(image[random.nextInt(28)])
     }
 
     override fun getItemCount(): Int = values.size
