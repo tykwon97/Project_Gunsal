@@ -3,8 +3,10 @@ package com.gs.gunsal.adapterPackage
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.gs.gunsal.R
 import com.gs.gunsal.databinding.FragmentHealthNewsBinding
 
 class MyNewsRecyclerViewAdapter(
@@ -12,6 +14,21 @@ class MyNewsRecyclerViewAdapter(
 ) : RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder>() {
 
     var itemOnClickListener: OnItemClickListener?=null
+    var image = listOf<Int>(
+        R.drawable.health_1,
+        R.drawable.health_2,
+        R.drawable.health_3,
+        R.drawable.health_4,
+        R.drawable.health_5,
+        R.drawable.health_6,
+        R.drawable.health_7,
+        R.drawable.health_8,
+        R.drawable.health_9,
+        R.drawable.health_10,
+        R.drawable.health_11,
+        R.drawable.health_12,
+        R.drawable.health_13,
+        R.drawable.health_14)
 
 
     interface OnItemClickListener{
@@ -32,8 +49,8 @@ class MyNewsRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.title.text = item
-
+        holder.title.text = ((item.replace("<b>", "")).replace("&quot;", "")).replace("</b>", "")
+        holder.image.setImageResource(image[position%14])
     }
 
     override fun getItemCount(): Int = values.size
@@ -41,7 +58,8 @@ class MyNewsRecyclerViewAdapter(
     inner class ViewHolder(binding: FragmentHealthNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val title: TextView = binding.newsTitle
-        init {
+        val image: ImageView = binding.newsImage
+                init {
             binding.click.setOnClickListener {
                 itemOnClickListener?.OnItemClick(this, it, values[adapterPosition], adapterPosition)
 
