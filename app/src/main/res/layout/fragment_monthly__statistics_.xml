@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".fragment.Monthly_Statistics_Fragment">
     <TextView
@@ -30,7 +29,6 @@
         android:layout_marginRight="20dp"
         android:background="@color/white"
         android:elevation="10dp"
-        app:mcv_showOtherDates="defaults"
         android:visibility="visible"/>
 
 
@@ -39,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="240dp"
+        android:layout_marginTop="270dp"
         android:src="@drawable/complete_point"
         android:visibility="visible" />
 
@@ -177,6 +175,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+
             <TextView
                 android:id="@+id/today_water_bar_gray"
                 android:layout_width="250dp"
@@ -187,10 +186,12 @@
 
             <TextView
                 android:id="@+id/today_water_bar_color"
-                android:layout_width="130dp"
-                android:layout_height="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="85dp"
                 android:layout_marginTop="60dp"
+                android:width="0dp"
+                android:height="7dp"
                 android:background="#2B7FEE" />
 
             <TextView
@@ -265,10 +266,12 @@
 
             <TextView
                 android:id="@+id/today_walk_bar_color"
-                android:layout_width="220dp"
-                android:layout_height="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="85dp"
                 android:layout_marginTop="60dp"
+                android:width="0dp"
+                android:height="7dp"
                 android:background="#FF1862" />
 
             <TextView
@@ -342,10 +345,12 @@
 
             <TextView
                 android:id="@+id/today_strech_bar_color"
-                android:layout_width="80dp"
-                android:layout_height="7dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="85dp"
                 android:layout_marginTop="60dp"
+                android:width="0dp"
+                android:height="7dp"
                 android:background="#FFCE16" />
 
             <TextView

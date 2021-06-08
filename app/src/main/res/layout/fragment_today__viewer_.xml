@@ -424,9 +424,20 @@
                 android:id="@+id/barchart_water_week"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="50dp"
-                />
+                android:layout_marginTop="50dp" />
+
+            <TextView
+                android:background="#FFFFFF"
+                android:layout_marginTop="240dp"
+                android:layout_marginLeft="27.5dp"
+                android:id="@+id/barchart_bottom_name_water"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="2.635"
+                android:text="월화수목금토일"/>
         </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/barchart_accept_water"
@@ -547,6 +558,16 @@
                 android:layout_height="200dp"
                 android:layout_marginTop="50dp"
                 />
+            <TextView
+                android:background="#FFFFFF"
+                android:layout_marginTop="240dp"
+                android:layout_marginLeft="27.5dp"
+                android:id="@+id/barchart_bottom_name_walk"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="2.635"
+                android:text="월화수목금토일"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -668,6 +689,16 @@
                 android:layout_height="200dp"
                 android:layout_marginTop="50dp"
                 />
+            <TextView
+                android:background="#FFFFFF"
+                android:layout_marginTop="240dp"
+                android:layout_marginLeft="27.5dp"
+                android:id="@+id/barchart_bottom_name_strech"
+                android:fontFamily="@font/gmarketsans_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="2.635"
+                android:text="월화수목금토일"/>
         </RelativeLayout>
 
         <RelativeLayout

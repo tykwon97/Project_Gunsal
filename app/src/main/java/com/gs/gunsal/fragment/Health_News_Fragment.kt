@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.gs.gunsal.R
 import com.gs.gunsal.adapterPackage.MyGridViewAdapter
-import com.gs.gunsal.adapterPackage.MyNewsRecyclerViewAdapter
 import com.gs.gunsal.databinding.FragmentHealthNewsListBinding
 import com.gs.gunsal.databinding.NewsKeywordItemBinding
 import com.ms129.stockPrediction.naverAPI.Items

@@ -7,6 +7,6 @@ data class Users(
 ): Serializable
 
 data class UserData(
-    val id: String,
-    val nickName: String
+    val user_id: String,
+    val nick_name: String
 ): Serializable

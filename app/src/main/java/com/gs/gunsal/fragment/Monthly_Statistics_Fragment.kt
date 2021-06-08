@@ -1,28 +1,28 @@
 package com.gs.gunsal.fragment
 
-import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gs.gunsal.EventDecorator
+import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.MainActivity
-import com.gs.gunsal.OneDayDecorator
 import com.gs.gunsal.R
+import com.gs.gunsal.dataClass.BodyDataDetail
+import com.gs.gunsal.dataClass.UserData
+import com.gs.gunsal.dataClass.WalkDataDetail
+import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executors
+import kotlin.math.floor
 
 class Monthly_Statistics_Fragment : Fragment() {
 
-    lateinit var binding: FragmentMonthlyStatisticsBinding
+    var binding: FragmentMonthlyStatisticsBinding?= null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,11 +32,13 @@ class Monthly_Statistics_Fragment : Fragment() {
         return binding!!.root
     }
 
-    var isPageOpen = false
+    var isPageOpen=false
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val result = arrayOf("2021,04,01", "2021,04,10", "2021,04,18", "2021,04,20")
-        ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor())
+
+
         val translatedown = AnimationUtils.loadAnimation(getContext(), R.anim.translate_down)
         val translateup = AnimationUtils.loadAnimation(getContext(), R.anim.translate_up)
 
@@ -49,32 +51,82 @@ class Monthly_Statistics_Fragment : Fragment() {
                 .commit()
             monthly.setOnDateChangedListener { widget, date, selected ->
                 //클릭한 날짜 받아오기
-                todayTranslateUpDateWalk.text =
-                    date.year.toString() + "." + date.month.toString() + "." + date.day.toString()
-                if (!isPageOpen) {
-                    isPageOpen = true
+                todayTranslateUpDateWalk.text=date.year.toString()+"."+(date.month+1).toString()+"."+date.day.toString()
+                if(!isPageOpen){
+                    isPageOpen=true
                     (activity as MainActivity).tabbargone() //탭바사라지게게
-                    monthly.visibility = View.GONE
-                    slideViewer.visibility = View.VISIBLE
-                    todayBlackBackground.visibility = View.VISIBLE
-                    monthlyTextColor.visibility = View.GONE
+                    monthly.visibility=View.GONE
+                    slideViewer.visibility=View.VISIBLE
+                    todayBlackBackground.visibility=View.VISIBLE
+                    monthlyTextColor.visibility=View.GONE
                     slideViewer.startAnimation(translateup)
+                    var today = date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString()
+
+                    if(date.month+1<10){
+                        if(date.day<10)
+                            today = date.year.toString()+"-0"+(date.month+1).toString()+"-0"+date.day.toString()
+                        else
+                            today = date.year.toString()+"-0"+(date.month+1).toString()+"-"+date.day.toString()
+                    }
+                    else{
+                        if(date.day<10)
+                            today = date.year.toString()+"-"+(date.month+1).toString()+"-0"+date.day.toString()
+                        else
+                            today = date.year.toString()+"-"+(date.month+1).toString()+"-"+date.day.toString()
+                    }
+
+
+                    FirebaseRepository.getTotalData("201710561", today)
+                    FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
+                        override fun onTotalDataCaught(
+                            userData: UserData,
+                            bodyData: BodyDataDetail,
+                            waterData: WaterDataDetail,
+                            walkData: WalkDataDetail
+                        ) {
+                            binding!!.apply {
+                                //칼로리
+                                todayKcalNumber.text = walkData.kcal_consumed.toString()
+
+                                //수분섭취
+                                val allwater:Float = (waterData.quantity.toFloat()/1000.0).toFloat()
+                                todayWaterNumber.text = (floor(allwater*100) /100).toString()
+                                //2리터 기준,2000ml
+                                if(waterData.quantity.toFloat()>=2000.0){
+                                    todayWaterBarColor.width=657
+                                }else{
+                                    todayWaterBarColor.width=((waterData.quantity.toFloat()/2000)*656.25).toInt()
+                                }
+
+                                //걸음수
+                                todayWalkNumber.text = walkData.step_count.toString()
+                                //10000보 기준
+                                if(walkData.step_count.toInt()>=10000){
+                                    todayWalkBarColor.width=657
+                                }else{
+                                    todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            barchartAccept.setOnClickListener {
-                if (isPageOpen) {
-                    slideViewer.visibility = View.GONE
-                    todayBlackBackground.visibility = View.GONE
+            barchartAccept.setOnClickListener{
+                if(isPageOpen){
+                    slideViewer.visibility=View.GONE
+                    todayBlackBackground.visibility=View.GONE
                     //slideViewer.startAnimation(translatedown)
                     (activity as MainActivity).tabbarvisible()
-                    isPageOpen = false
-                    monthly.visibility = View.VISIBLE
-                    monthlyTextColor.visibility = View.VISIBLE
+                    isPageOpen=false
+                    monthly.visibility=View.VISIBLE
+                    monthlyTextColor.visibility=View.VISIBLE
                 }
             }
+
+
         }
     }
-
     inner class ApiSimulator internal constructor(var Time_Result: Array<String>) :
         AsyncTask<Void?, Void?, List<CalendarDay>>() {
         override fun doInBackground(vararg params: Void?): List<CalendarDay> {
@@ -101,19 +153,24 @@ class Monthly_Statistics_Fragment : Fragment() {
             return dates
         }
 
-        override fun onPostExecute(calendarDays: List<CalendarDay>) {
-            super.onPostExecute(calendarDays)
-            if (isCancelled) {
-                return
-            }
-            binding.monthly.addDecorator(
-                EventDecorator(
-                    ContextCompat.getColor(context!!, R.color.select_color),
-                    calendarDays,
-                    context!!
-                )
-            )
-        }
-
+//        override fun onPostExecute(calendarDays: List<CalendarDay>) {
+//            super.onPostExecute(calendarDays)
+//            if (isCancelled) {
+//                return
+//            }
+//            binding!!.monthly.addDecorator(
+//                EventDecorator(
+//                    ContextCompat.getColor(context!!, R.color.select_color),
+//                    calendarDays,
+//                    context!!
+//                )
+//            )
+//        }
+//
+//    }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

@@ -19,10 +19,14 @@ import com.github.mikephil.charting.data.BarEntry
 import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
+import com.gs.gunsal.dataClass.BodyDataDetail
+import com.gs.gunsal.dataClass.UserData
+import com.gs.gunsal.dataClass.WalkDataDetail
+import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.FragmentTodayViewerBinding
 import kotlin.math.floor
 
-class Today_Viewer_Fragment : Fragment() {
+class Today_Viewer_Fragment(val userId: String) : Fragment() {
 
     var binding: FragmentTodayViewerBinding?= null
     override fun onCreateView(
@@ -128,43 +132,79 @@ class Today_Viewer_Fragment : Fragment() {
     }
 
     private fun initData() {
-        Log.e("initData", "PROGRESSING")
-        FirebaseRepository.reference.child("walk_data").child("201710560")
-            .child("2021-06-07").get().addOnSuccessListener { snapShot->
-                val walkData = snapShot.child("step_count").value.toString()
-                binding!!.todayWalkNumber.text = walkData
-                //binding!!.todayWalkNumberDetail = walkData
-                //10000보 기준
-                if(walkData.toInt()>=10000){
-                    binding!!.todayWalkBarColor.width=657
-                }else{
-                    binding!!.todayWalkBarColor.width=((walkData.toFloat()/10000)*656.25).toInt()
+//        Log.e("initData", "PROGRESSING")
+//        FirebaseRepository.reference.child("walk_data").child("201710561")
+//            .child("2021-05-31").get().addOnSuccessListener { snapShot->
+//                val walkData = snapShot.child("step_count").value.toString()
+//                binding!!.todayWalkNumber.text = walkData
+//                //binding!!.todayWalkNumberDetail = walkData
+//                //10000보 기준
+//                if(walkData.toInt()>=10000){
+//                    binding!!.todayWalkBarColor.width=657
+//                }else{
+//                    binding!!.todayWalkBarColor.width=((walkData.toFloat()/10000)*656.25).toInt()
+//                }
+//
+//                // Log.e("initData", "SUCCESS")
+//
+//            }
+//        FirebaseRepository.reference.child("water_data").child("201710560")
+//            .child("2021-06-02").get().addOnSuccessListener { snapShot->
+//                val waterData = snapShot.child("quantity").value.toString()
+//                val allwater:Float = (waterData.toFloat()/1000.0).toFloat()
+//                binding!!.todayWaterNumber.text = (floor(allwater*10)/10).toString()
+//                //binding!!.todayWaterNumberDetail = waterData
+//                //2리터 기준,2000ml
+//
+//                if(waterData.toFloat()>=2000.0){
+//                    binding!!.todayWaterBarColor.width=657
+//                }else{
+//                    binding!!.todayWaterBarColor.width=((waterData.toFloat()/2000)*656.25).toInt()
+//                }
+//
+//
+//                 Log.e("initData", "SUCCESS")
+//
+//            }
+        val today = FirebaseRepository.getCurrentDate()
+        FirebaseRepository.getTotalData(userId, today)
+        Log.i("TodayViewerFragment", "PROGRESSING")
+        FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
+            override fun onTotalDataCaught(
+                userData: UserData,
+                bodyData: BodyDataDetail,
+                waterData: WaterDataDetail,
+                walkData: WalkDataDetail
+            ) {
+                binding!!.apply {
+                    //칼로리
+                    todayKcalNumber.text = walkData.kcal_consumed.toString()
+
+                    //수분섭취
+                    val allwater:Float = (waterData.quantity.toFloat()/1000.0).toFloat()
+                    todayWaterNumber.text = (floor(allwater*100)/100).toString()
+                    todayWaterNumberDetail.text=(floor(allwater*100)/100).toString()
+                    //2리터 기준,2000ml
+                    if(waterData.quantity.toFloat()>=2000.0){
+                        binding!!.todayWaterBarColor.width=657
+                    }else{
+                        binding!!.todayWaterBarColor.width=((waterData.quantity.toFloat()/2000)*656.25).toInt()
+                    }
+
+                    //걸음수
+                    todayWalkNumber.text = walkData.step_count.toString()
+                    todayWalkNumberDetail.text = walkData.step_count.toString()
+                    //10000보 기준
+                    if(walkData.step_count.toInt()>=10000){
+                        binding!!.todayWalkBarColor.width=657
+                    }else{
+                        binding!!.todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
+                    }
                 }
-
-                // Log.e("initData", "SUCCESS")
-
             }
-        FirebaseRepository.reference.child("water_data").child("201710560")
-            .child("2021-06-07").get().addOnSuccessListener { snapShot->
-                val waterData = snapShot.child("quantity").value.toString()
-                val allwater:Float = (waterData.toFloat()/1000.0).toFloat()
-                binding!!.todayWaterNumber.text = (floor(allwater*10)/10).toString()
-                //binding!!.todayWaterNumberDetail = waterData
-                //2리터 기준,2000ml
-
-                if(waterData.toFloat()>=2000.0){
-                    binding!!.todayWaterBarColor.width=657
-                }else{
-                    binding!!.todayWaterBarColor.width=((waterData.toFloat()/2000)*656.25).toInt()
-                }
-
-
-                 Log.e("initData", "SUCCESS")
-
-            }
+        }
 
     }
-
     private fun setChartViewWalk(view: View){
         var walk_week= binding?.barchartWalkWeek
         if (walk_week != null) {
@@ -226,9 +266,13 @@ class Today_Viewer_Fragment : Fragment() {
         valueList.add(350.1)
         valueList.add(80.1)
 
-
+//        val today = FirebaseRepository.getCurrentDate()
+//        val date=today.substring(8,10)
+//        val month=today.substring(5,7)
+//        Log.e("today",today)
+//        Log.e("month",month)
         for(i in 0 until valueList.size){
-            val barEntry=BarEntry(i+1.toFloat(),valueList[i].toFloat())
+            val barEntry=BarEntry((i+1).toFloat(),valueList[i].toFloat())
             entries.add(barEntry)
         }
 
