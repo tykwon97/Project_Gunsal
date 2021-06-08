@@ -129,8 +129,8 @@ class Today_Viewer_Fragment : Fragment() {
 
     private fun initData() {
         Log.e("initData", "PROGRESSING")
-        FirebaseRepository.reference.child("walk_data").child("201710561")
-            .child("2021-05-31").get().addOnSuccessListener { snapShot->
+        FirebaseRepository.reference.child("walk_data").child("201710560")
+            .child("2021-06-07").get().addOnSuccessListener { snapShot->
                 val walkData = snapShot.child("step_count").value.toString()
                 binding!!.todayWalkNumber.text = walkData
                 //binding!!.todayWalkNumberDetail = walkData
@@ -145,7 +145,7 @@ class Today_Viewer_Fragment : Fragment() {
 
             }
         FirebaseRepository.reference.child("water_data").child("201710560")
-            .child("2021-06-02").get().addOnSuccessListener { snapShot->
+            .child("2021-06-07").get().addOnSuccessListener { snapShot->
                 val waterData = snapShot.child("quantity").value.toString()
                 val allwater:Float = (waterData.toFloat()/1000.0).toFloat()
                 binding!!.todayWaterNumber.text = (floor(allwater*10)/10).toString()

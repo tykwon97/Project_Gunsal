@@ -15,6 +15,6 @@
     <color name="waterback_color">#C1D9FA</color>
     <color name="stretchingback_color">#FFF0BB</color>
     <color name="walkback_color">#FFBBD4</color>
-
+    <color name="profile_back_color">#F5F6F7</color>
 
 </resources>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProfileActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10pt"
+        android:text="자세한 측정을 위해\n정보를 입력해주세요 :)"
+        android:textColor="@color/black"
+        android:fontFamily="@font/gmarketsans_medium"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        />
+    <EditText
+        android:id="@+id/nickName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gmarketsans_medium"
+        android:hint="닉네임"
+        android:layout_margin="20dp"
+        android:textColor="@color/black"
+        android:textSize="9pt"
+        android:padding="20dp"
+        android:background="@color/profile_back_color"/>
+    <EditText
+        android:id="@+id/user_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gmarketsans_medium"
+        android:hint="키 (cm 제외)"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:textSize="9pt"
+        android:padding="20dp"
+        android:background="@color/profile_back_color"/>
+
+    <EditText
+        android:id="@+id/user_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gmarketsans_medium"
+        android:hint="몸무게 (kg 제외)"
+        android:layout_margin="20dp"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:textSize="9pt"
+        android:padding="20dp"
+        android:background="@color/profile_back_color"/>
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textSize="9pt"
+        android:text="시작하기!"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:fontFamily="@font/gmarketsans_bold"
+        android:textColor="@color/white"
+        android:background="@drawable/round_shape"/>
+</LinearLayout>

@@ -6,11 +6,10 @@
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/item"
-        android:textSize="7pt"
+        android:textSize="6pt"
         android:padding="5dp"
-        android:text="#운동"
-        android:textColor="@color/white"
-        android:background="@drawable/round_shape"
+        android:textColor="@color/black"
+        android:background="@drawable/unselectshape"
         android:layout_width="wrap_content"
         android:fontFamily="@font/gmarketsans_medium"
         android:layout_height="wrap_content"/>
