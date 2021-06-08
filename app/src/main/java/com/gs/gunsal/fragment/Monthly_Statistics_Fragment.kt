@@ -1,42 +1,32 @@
 package com.gs.gunsal.fragment
 
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gs.gunsal.FirebaseRepository
+import com.gs.gunsal.EventDecorator
 import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
-import com.gs.gunsal.dataClass.BodyDataDetail
-import com.gs.gunsal.dataClass.UserData
-import com.gs.gunsal.dataClass.WalkDataDetail
-import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import java.util.*
-import kotlin.math.floor
+import java.util.concurrent.Executors
 
 class Monthly_Statistics_Fragment : Fragment() {
 
-    var binding: FragmentMonthlyStatisticsBinding?= null
+    lateinit var binding: FragmentMonthlyStatisticsBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMonthlyStatisticsBinding.inflate(layoutInflater, container, false)
-        return binding!!.root
-    }
-
-    var isPageOpen=false
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
 
         val translatedown = AnimationUtils.loadAnimation(getContext(), R.anim.translate_down)
@@ -46,88 +36,70 @@ class Monthly_Statistics_Fragment : Fragment() {
             monthlyTextColor.bringToFront()
             monthly.state().edit()
                 .setMinimumDate(CalendarDay.from(2021, 0, 1))
-                .setMaximumDate(CalendarDay.from(2021,6,24))
+                .setMaximumDate(CalendarDay.from(2021, 6, 24))
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit()
             monthly.setOnDateChangedListener { widget, date, selected ->
                 //클릭한 날짜 받아오기
-                todayTranslateUpDateWalk.text=date.year.toString()+"."+(date.month+1).toString()+"."+date.day.toString()
-                if(!isPageOpen){
-                    isPageOpen=true
+                todayTranslateUpDateWalk.text =
+                    date.year.toString() + "." + date.month.toString() + "." + date.day.toString()
+                if (!isPageOpen) {
+                    isPageOpen = true
                     (activity as MainActivity).tabbargone() //탭바사라지게게
-                    monthly.visibility=View.GONE
-                    slideViewer.visibility=View.VISIBLE
-                    todayBlackBackground.visibility=View.VISIBLE
-                    monthlyTextColor.visibility=View.GONE
+                    monthly.visibility = View.GONE
+                    slideViewer.visibility = View.VISIBLE
+                    todayBlackBackground.visibility = View.VISIBLE
+                    monthlyTextColor.visibility = View.GONE
                     slideViewer.startAnimation(translateup)
-                    var today = date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString()
-
-                    if(date.month+1<10){
-                        if(date.day<10)
-                            today = date.year.toString()+"-0"+(date.month+1).toString()+"-0"+date.day.toString()
-                        else
-                            today = date.year.toString()+"-0"+(date.month+1).toString()+"-"+date.day.toString()
-                    }
-                    else{
-                        if(date.day<10)
-                            today = date.year.toString()+"-"+(date.month+1).toString()+"-0"+date.day.toString()
-                        else
-                            today = date.year.toString()+"-"+(date.month+1).toString()+"-"+date.day.toString()
-                    }
-
-
-                    FirebaseRepository.getTotalData("201710561", today)
-                    FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
-                        override fun onTotalDataCaught(
-                            userData: UserData,
-                            bodyData: BodyDataDetail,
-                            waterData: WaterDataDetail,
-                            walkData: WalkDataDetail
-                        ) {
-                            binding!!.apply {
-                                //칼로리
-                                todayKcalNumber.text = walkData.kcal_consumed.toString()
-
-                                //수분섭취
-                                val allwater:Float = (waterData.quantity.toFloat()/1000.0).toFloat()
-                                todayWaterNumber.text = (floor(allwater*100) /100).toString()
-                                //2리터 기준,2000ml
-                                if(waterData.quantity.toFloat()>=2000.0){
-                                    todayWaterBarColor.width=657
-                                }else{
-                                    todayWaterBarColor.width=((waterData.quantity.toFloat()/2000)*656.25).toInt()
-                                }
-
-                                //걸음수
-                                todayWalkNumber.text = walkData.step_count.toString()
-                                //10000보 기준
-                                if(walkData.step_count.toInt()>=10000){
-                                    todayWalkBarColor.width=657
-                                }else{
-                                    todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
-
-                                }
-                            }
-                        }
-                    }
                 }
             }
-            barchartAccept.setOnClickListener{
-                if(isPageOpen){
-                    slideViewer.visibility=View.GONE
-                    todayBlackBackground.visibility=View.GONE
+            barchartAccept.setOnClickListener {
+                if (isPageOpen) {
+                    slideViewer.visibility = View.GONE
+                    todayBlackBackground.visibility = View.GONE
                     //slideViewer.startAnimation(translatedown)
                     (activity as MainActivity).tabbarvisible()
-                    isPageOpen=false
-                    monthly.visibility=View.VISIBLE
-                    monthlyTextColor.visibility=View.VISIBLE
+                    isPageOpen = false
+                    monthly.visibility = View.VISIBLE
+                    monthlyTextColor.visibility = View.VISIBLE
                 }
             }
+        }
 
 
+        return binding!!.root
+    }
+
+    var isPageOpen = false
+    override fun onDetach() {
+        super.onDetach()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val result = arrayOf("2021,06,01", "2021,06,10", "2021,06,19", "2021,06,21")
+        val result2 = arrayOf("2021,06,12", "2021,06,14", "2021,06,16", "2021,06,24")
+        val result3 = arrayOf("2021,06,05", "2021,06,15", "2021,06,18", "2021,06,20")
+        ApiSimulator(result, ContextCompat.getColor(requireContext(), R.color.select_color)).executeOnExecutor(Executors.newSingleThreadExecutor())
+        ApiSimulator(result2, ContextCompat.getColor(requireContext(), R.color.stretching_color)).executeOnExecutor(Executors.newSingleThreadExecutor())
+        ApiSimulator(result3, ContextCompat.getColor(requireContext(), R.color.walk_color)).executeOnExecutor(Executors.newSingleThreadExecutor())
+    }
+    override fun onPause() {
+        super.onPause()
+
+        binding.apply {
+            slideViewer.visibility = View.GONE
+            todayBlackBackground.visibility = View.GONE
+            //slideViewer.startAnimation(translatedown)
+            (activity as MainActivity).tabbarvisible()
+            isPageOpen = false
+            monthly.visibility = View.VISIBLE
+            monthlyTextColor.visibility = View.VISIBLE
         }
     }
-    inner class ApiSimulator internal constructor(var Time_Result: Array<String>) :
+
+
+    inner class ApiSimulator internal constructor(var Time_Result: Array<String>, val color: Int) :
         AsyncTask<Void?, Void?, List<CalendarDay>>() {
         override fun doInBackground(vararg params: Void?): List<CalendarDay> {
             try {
@@ -142,7 +114,7 @@ class Monthly_Statistics_Fragment : Fragment() {
             /*월은 0이 1월 년,일은 그대로*/
             //string 문자열인 Time_Result 을 받아와서 ,를 기준으로짜르고 string을 int 로 변환
             for (i in Time_Result.indices) {
-                val day: CalendarDay = CalendarDay.from(calendar)
+                val day= CalendarDay.from(calendar)
                 val time = Time_Result[i].split(",").toTypedArray()
                 val year = time[0].toInt()
                 val month = time[1].toInt()
@@ -152,25 +124,21 @@ class Monthly_Statistics_Fragment : Fragment() {
             }
             return dates
         }
+        var data = intArrayOf(1,2,0,1)
 
-//        override fun onPostExecute(calendarDays: List<CalendarDay>) {
-//            super.onPostExecute(calendarDays)
-//            if (isCancelled) {
-//                return
-//            }
-//            binding!!.monthly.addDecorator(
-//                EventDecorator(
-//                    ContextCompat.getColor(context!!, R.color.select_color),
-//                    calendarDays,
-//                    context!!
-//                )
-//            )
-//        }
-//
-//    }
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+        override fun onPostExecute(calendarDays: List<CalendarDay>) {
+            super.onPostExecute(calendarDays)
+            if (isCancelled) {
+                return
+            }
+            binding.monthly.addDecorator(
+                EventDecorator(
+                    color,
+                    calendarDays,
+                    context!!
+                )
+            )
+        }
+
     }
 }
