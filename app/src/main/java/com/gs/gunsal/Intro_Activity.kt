@@ -101,6 +101,7 @@ class Intro_Activity : AppCompatActivity() {
                             walkData: WalkDataDetail,
                             stretchData: StretchDataDetail
                         ) {
+
                         }
                     }
                     val intent = Intent(this@Intro_Activity, ProfileActivity::class.java)

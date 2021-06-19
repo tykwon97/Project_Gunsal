@@ -176,6 +176,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 // initial value
                 mCounterSteps = event!!.values[0].toInt()
             }
+
             //리셋 안된 값 + 현재값 - 리셋 안된 값
             mSteps = event!!.values[0].toInt() - mCounterSteps
             binding.apply {
@@ -211,7 +212,68 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             //센서의 속도 설정,만보기 센서 리스너 오브젝트를 등록
             sensorManager?.registerListener(this, stepCountSensor, SensorManager.SENSOR_DELAY_FASTEST)
         }
-    }
+
+
+        fun waterNotification() { //물 섭취 알림부분
+            FirebaseRepository.getDrinkData("201710560",FirebaseRepository.getCurrentDate())
+            FirebaseRepository.waterDataListener = object : FirebaseRepository.OnWaterDataListener {
+                override fun onWaterDataCaught(waterDataDetail: WaterDataDetail) {
+                    val recentTime = waterDataDetail.recent_time
+                val currentTime = FirebaseRepository.getCurrentTime()
+
+                Log.i("WalkNotification:recentTIme", recentTime)
+                Log.i("WalkNotification:recentTIme", currentTime)
+
+                val recent = recentTime.split(":")
+                val current = currentTime.split(":")
+                val recenttime =
+                    recent[0].toInt() * 60 * 60 + recent[1].toInt() * 60 + recent[2].toInt()
+                val currenttime =
+                    current[0].toInt() * 60 * 60 + current[1].toInt() * 60 + current[2].toInt()
+
+                val timeInterval = currenttime - recenttime
+                Log.i("WalkNotification:timeInterval", timeInterval.toString())
+
+                if (timeInterval <= 360) { //1분이내에 또 섭취한 경우
+                    val id = "waterchannel"
+                    val name = "물 섭취 알림"
+                    val notificationChannel = NotificationChannel(
+                        id,
+                        name,
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    )
+                    //속성 설정
+                    notificationChannel.enableVibration(true)//진동
+                    notificationChannel.enableLights(true) //빛
+                    notificationChannel.lightColor = Color.BLUE
+                    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+                    var message = "이제 물 마셔야 할 시간입니다! 수분 공급해주세요! "
+
+                    val builder = NotificationCompat.Builder(applicationContext, id)
+                        .setSmallIcon(R.drawable.setting_water) //알림 이미지
+                        .setContentTitle("수분 섭취 알림")
+                        .setContentText(message)
+                        .setAutoCancel(true) //알림 클릭시 삭제 여부
+
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    intent.putExtra("water", message) //key랑 message
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+                    val pendingIntent = PendingIntent.getActivity(
+                        applicationContext,
+                        2,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                    builder.setContentIntent(pendingIntent)
+
+                    val manager =
+                        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager //알림메시지를 NOTIFY
+                    manager.createNotificationChannel(notificationChannel)
+                    val notification = builder.build()
+
+                    manager.notify(2, notification)
+                }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -229,6 +291,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val timerTask = object : TimerTask() {
             override fun run() { //TimerTask에서 반드시 override 해줘야됨!
                 waterNotification()
+
             }
         }
         timer?.schedule(timerTask, 5000)//5초, 3600000(1시간)

@@ -120,7 +120,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
 
     private fun revokeAccess() { //회원탈퇴
         // Firebase sign out
-        googleSignInClient.signOut().addOnCompleteListener {
+        //googleSignInClient.signOut().addOnCompleteListener {
             firebaseAuth.currentUser!!.delete().addOnCompleteListener {
                 FirebaseRepository.removeUser(userId)
                 val intent = Intent(requireActivity(), LoginActivity::class.java)
@@ -128,7 +128,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
                 requireActivity().finish()
             }
             //firebaseAuth.signOut()
-        }
+        //}
 //        googleSignInClient.revokeAccess().addOnCompleteListener(requireActivity()) {
 //            FirebaseRepository.removeUser(userId)
 //            firebaseAuth.currentUser!!.delete().

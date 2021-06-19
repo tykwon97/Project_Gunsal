@@ -87,7 +87,8 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                     }
 
 
-                    FirebaseRepository.getTotalData("201710561", today)
+                    FirebaseRepository.getTotalData(userId, today)
+
 
                     FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
                         override fun onTotalDataCaught(
@@ -130,6 +131,16 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                                 val secResult = Math.round(sec * 10) / 10f
                                 val result = minutes + secResult
                                 todayStrechNumber.text = "$result"
+                                if(result.toFloat()>=15.0){
+                                    binding!!.todayStrechBarColor.width=657
+                                }else{
+                                    binding!!.todayStrechBarColor.width=((result.toFloat()/15.0)*656.25).toInt()
+                                }
+
+                                val walkkcal = (walkData.step_count.toFloat()*33)/1000.0.toFloat() //1보당 33cal
+                                val strechkcal = result*3.toFloat()//1분당 3kcal
+                                val sumkcal = Math.round((walkkcal+strechkcal)*10)/10f
+                                binding!!.todayKcalNumber.text= sumkcal.toString()
                             }
                         }
                     }
