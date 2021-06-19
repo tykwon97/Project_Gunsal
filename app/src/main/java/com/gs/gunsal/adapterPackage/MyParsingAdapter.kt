@@ -8,6 +8,7 @@ import com.gs.gunsal.databinding.FragmentHealthNewsBinding
 import com.gs.gunsal.fragment.Mydata
 
 class MyParsingAdapter(val items: ArrayList<Mydata>):RecyclerView.Adapter<MyParsingAdapter.MyViewHolder>() {
+    //ParsingAdapter
 
     interface OnItemClickListener {
         fun OnItemClick(holder: MyViewHolder, view: View, data: Mydata, position: Int)

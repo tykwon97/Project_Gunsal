@@ -1,32 +1,31 @@
 package com.gs.gunsal
 
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.util.Log
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
-import kotlin.collections.HashSet
 
 
-class EventDecorator(color: Int, dates: Collection<CalendarDay>, context: Context) :
+class EventDecorator(dates: CalendarDay, context: Context, color: Int) :
     DayViewDecorator {
-    var drawable: Drawable? = null
     var color = 0
-    var dates: HashSet<CalendarDay>? = null
+    var dates: CalendarDay? = null
 
     init {
-        this.drawable = drawable
         this.color = color
-        this.dates = HashSet(dates)
+        this.dates = dates
     }
 
     override fun shouldDecorate(day: CalendarDay): Boolean {
-        return dates!!.contains(day)
+        Log.i("dates", dates.toString())
+        return day.equals(dates)
     }
 
     override fun decorate(view: DayViewFacade) {
         view.addSpan(DotSpan(15F, color))
+        Log.i("data", view.toString())
 
 
     }
