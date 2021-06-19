@@ -10,17 +10,15 @@ import androidx.fragment.app.Fragment
 import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
-import com.gs.gunsal.dataClass.BodyDataDetail
-import com.gs.gunsal.dataClass.UserData
-import com.gs.gunsal.dataClass.WalkDataDetail
-import com.gs.gunsal.dataClass.WaterDataDetail
+import com.gs.gunsal.dataClass.*
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import java.util.*
+import java.util.concurrent.Executors
 import kotlin.math.floor
 
-class Monthly_Statistics_Fragment : Fragment() {
+class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
 
     var binding: FragmentMonthlyStatisticsBinding?= null
     override fun onCreateView(
@@ -34,11 +32,14 @@ class Monthly_Statistics_Fragment : Fragment() {
 
     var isPageOpen=false
 
-
+    /*
+    * 기본 아이디어
+    * 1. 현재 달: 일단 현재 날짜를 가져온 뒤 그 날짜 숫자 만큼 for문을 돌아 1일 까지의 데이터를 가져옴
+    * 2. 이전 달: 현재 날짜에 해당하는 달의 이전(-n)달의 끝 날을 구한 뒤 그 날짜 숫자 만큼 for문을 돌아 1일까지의 데이터를 가져옴*/
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+        val result = arrayOf("2021,04,10", "2021,04,15", "2021,04,20", "2021,04,25")
+        ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor())
         val translatedown = AnimationUtils.loadAnimation(getContext(), R.anim.translate_down)
         val translateup = AnimationUtils.loadAnimation(getContext(), R.anim.translate_up)
 
@@ -82,7 +83,8 @@ class Monthly_Statistics_Fragment : Fragment() {
                             userData: UserData,
                             bodyData: BodyDataDetail,
                             waterData: WaterDataDetail,
-                            walkData: WalkDataDetail
+                            walkData: WalkDataDetail,
+                            stretchData: StretchDataDetail
                         ) {
                             binding!!.apply {
                                 //칼로리
@@ -107,6 +109,13 @@ class Monthly_Statistics_Fragment : Fragment() {
                                     todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
 
                                 }
+
+                                //스트레칭 시간
+                                val minutes = stretchData.time / 60
+                                val sec  = (stretchData.time % 60) / 60.0
+                                val secResult = Math.round(sec * 10) / 10f
+                                val result = minutes + secResult
+                                todayStrechNumber.text = "$result"
                             }
                         }
                     }

@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import com.gs.gunsal.dataClass.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -16,30 +17,50 @@ object FirebaseRepository {
     interface OnWaterDataListener{
         fun onWaterDataCaught(waterDataDetail: WaterDataDetail)
     }
-    var waterDataListener:OnWaterDataListener ?= null
+    var waterDataListener: OnWaterDataListener ?= null
 
     interface OnWalkingDataListener{
         fun onWalkDataCaught(walkDataDetail: WalkDataDetail)
-        fun onWalkListCaught(newWalkData: ArrayList<NewWalkData>)
     }
-    var walkDataListener:OnWalkingDataListener ?= null
+    var walkDataListener: OnWalkingDataListener ?= null
 
     interface OnBodyDataListener{
         fun onBodyDataCaught(bodyDataDetail: BodyDataDetail)
     }
-    var bodyDataListener:OnBodyDataListener ?= null
-
-    interface OnTotalDataListener{
-        fun onTotalDataCaught(userData: UserData, bodyData: BodyDataDetail, waterData: WaterDataDetail, walkData: WalkDataDetail)
-        //fun onTotalDataFailed() // 이 함수가 호출될 때면 이미 데이터가 새로 추가된 시점이므로 getTotalData를 다시 호출해주면 됨
-    }
-    var totalDataListener:OnTotalDataListener ?= null
+    var bodyDataListener: OnBodyDataListener ?= null
 
     interface OnUserDataListener{
         fun onUserDataCaught(userData: UserData, isFirst: Boolean)
         fun onUserDataUncaught(user: FirebaseUser)
     }
     var userDataListener: OnUserDataListener ?= null
+
+    interface OnStretchDataListener{
+        fun onStretchDataCaught(stretchDataDetail: StretchDataDetail)
+    }
+    var stretchDataListener: OnStretchDataListener ?= null
+
+    interface OnWalkWeekDataListener{
+        fun onWalkWeekDataCaught(weekWalkData: ArrayList<Int>, dayOfWeek: Int)
+    }
+    var walkWeekDataListener: OnWalkWeekDataListener ?= null
+
+    interface OnWaterWeekDataListener{
+        fun onWaterWeekDataCaught(weekWaterData: ArrayList<Int>, dayOfWeek: Int)
+    }
+    var waterWeekDataListener: OnWaterWeekDataListener ?= null
+
+    interface  OnStretchWeekDataListener{
+        fun onStretchWeekDataCaught(weekStretchData: ArrayList<Int>, dayOfWeek: Int)
+    }
+    var stretchWeekDataListener: OnStretchWeekDataListener ?= null
+
+    interface OnTotalDataListener{
+        fun onTotalDataCaught(userData: UserData, bodyData: BodyDataDetail, waterData: WaterDataDetail,
+                              walkData: WalkDataDetail, stretchData: StretchDataDetail)
+        //fun onTotalDataFailed() // 이 함수가 호출될 때면 이미 데이터가 새로 추가된 시점이므로 getTotalData를 다시 호출해주면 됨
+    }
+    var totalDataListener:OnTotalDataListener ?= null
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +76,10 @@ object FirebaseRepository {
         reference.child("walk_data").child(uid).removeValue()
         reference.child("water_data").child(uid).removeValue()
         reference.child("body_data").child(uid).removeValue()
+    }
+
+    fun updateUserNickName(userId: String, nickName: String){
+        reference.child("users").child(userId).child("nick_name").setValue(nickName)
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +116,27 @@ object FirebaseRepository {
                 val waterData = WaterDataDetail(quantity.toInt(), memo, recentTime)
                 waterDataListener!!.onWaterDataCaught(waterData)
             }
+        }
+    }
+
+    fun getWeekDrinkData(userId: String, lastDate: LocalDate) {
+        reference.get().addOnSuccessListener { snapShot ->
+            val userWaterData = snapShot.child("water_data").child(userId)
+            val tempWeekData = ArrayList<Int>()
+            val dayOfWeek = lastDate.dayOfWeek.value // 월(1) ~ 일(7)
+            for(i in 0 until 7) {
+                val date = lastDate.minusDays(i.toLong()).format(DateTimeFormatter.ISO_LOCAL_DATE) as String
+                if(userWaterData.child(date).value == null || userWaterData.child(date).value.toString() == "null"){
+                    tempWeekData.add(0)
+                }
+                else{
+                    val quantity = userWaterData.child(date).child("quantity").value.toString().toInt()
+                    tempWeekData.add(quantity)
+                }
+            }
+            //val walkWeekData = tempWeekData.subList(tempWeekData.lastIndex, 0) as ArrayList<Double>
+            waterWeekDataListener!!.onWaterWeekDataCaught(tempWeekData.reversed() as ArrayList<Int>, dayOfWeek)
+
         }
     }
 
@@ -150,25 +196,28 @@ object FirebaseRepository {
         }
     }
 
-    fun getWalkDataList(userId: String){
-        val today = getCurrentDate()
-
-        reference.child("walk_data").child(userId).get().addOnSuccessListener { snapShot->
-            val newWalDataList = ArrayList<NewWalkData>()
-            val list = snapShot.children.forEach {
-                val date = it.key.toString()
-                val stepCount = it.child("step_count").value.toString()
-                val memo = it.child("memo").value.toString()
-                val kcalConsumed = it.child("kcal_consumed").value.toString()
-                val newWalkData = NewWalkData(date, stepCount.toInt(), kcalConsumed.toDouble(), memo)
-                newWalDataList.add(newWalkData)
+    fun getWeekWalkData(userId: String, lastDate: LocalDate) {
+        reference.get().addOnSuccessListener { snapShot ->
+            val userWalkData = snapShot.child("walk_data").child(userId)
+            val tempWeekData = ArrayList<Int>()
+            val dayOfWeek = lastDate.dayOfWeek.value // 월(1) ~ 일(7)
+            for(i in 0 until 7) {
+                val date = lastDate.minusDays(i.toLong()).format(DateTimeFormatter.ISO_LOCAL_DATE) as String
+                if(userWalkData.child(date).value == null || userWalkData.child(date).value.toString() == "null"){
+                    tempWeekData.add(0)
+                }
+                else{
+                    val stepCount = userWalkData.child(date).child("step_count").value.toString().toInt()
+                    tempWeekData.add(stepCount)
+                }
             }
-            walkDataListener!!.onWalkListCaught(newWalDataList)
+            //val walkWeekData = tempWeekData.subList(tempWeekData.lastIndex, 0) as ArrayList<Double>
+            walkWeekDataListener!!.onWalkWeekDataCaught(tempWeekData.reversed() as ArrayList<Int>, dayOfWeek)
+
         }
     }
 
 
-    // 처음 add도 update로 대체, 데이터가 존재하지 않으면 자동으로 삽입되게 함
     // + stepCount가 어떤 식으로 들어오는 건지 궁금 (계속 누적되게 가져와지는건지)
     private fun handleWalkData(userId: String, date: String, walkData: WalkDataDetail){
         reference.child("walk_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
@@ -236,8 +285,8 @@ object FirebaseRepository {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////<Body Data>////////////////////////////////////////////////////////////////////
 
-    fun getBodyData(userId: String, date: String) {
-        reference.child("body_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
+    fun getBodyData(userId: String) {
+        reference.child("body_data").child(userId).get().addOnSuccessListener { snapShot->
             val height = snapShot.child("height").value.toString()
             val weight = snapShot.child("weight").value.toString()
             val bodyData = BodyDataDetail(height = height.toDouble(), weight = weight.toDouble())
@@ -245,50 +294,46 @@ object FirebaseRepository {
 
         }
     }
-    private fun handleBodyData(userId: String, date: String, bodyData: BodyDataDetail){
-        reference.child("body_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
+    private fun handleBodyData(userId: String, bodyData: BodyDataDetail){
+        reference.child("body_data").child(userId).get().addOnSuccessListener { snapShot->
             if(!snapShot.exists()) {
-                val oldBodyData = BodyDataDetail(-1.0, -1.0)
-                updateBodyCallBack(userId, date, oldBodyData, bodyData)
+                val oldBodyData = BodyDataDetail(0.0, 0.0)
+                updateBodyCallBack(userId, oldBodyData, bodyData)
             }
             else {
                 val weight = snapShot.child("weight").value.toString()
                 val height = snapShot.child("height").value.toString()
                 val oldBodyData = BodyDataDetail(weight.toDouble(), height.toDouble())
                 Log.d("getBodyData1","${oldBodyData.height}, ${oldBodyData.weight}")
-                updateBodyCallBack(userId, date, oldBodyData, bodyData)
+                updateBodyCallBack(userId, oldBodyData, bodyData)
             }
         }
     }
 
     private fun updateBodyCallBack
                 (userId: String,
-                 date: String,
                  oldBodyData: BodyDataDetail,
                  newBodyData: BodyDataDetail) {
-        if(oldBodyData.height == -1.0){
+        if(oldBodyData.height == 0.0){
             reference.child("body_data")
                 .child(userId)
-                .child(date)
                 .setValue(newBodyData)
         }
         else{
             reference.child("body_data")
                 .child(userId)
-                .child(date)
                 .setValue(newBodyData)
         }
     }
 
     fun addBodyData(userId: String, height: Double, weight: Double){
-        val currentDate = getCurrentDate()
         val bodyData = BodyDataDetail(height, weight)
-        handleBodyData(userId, currentDate, bodyData)
+        handleBodyData(userId, bodyData)
     }
 
-    fun updateBodyData(userId: String, date: String, height: Double, weight: Double){
+    fun updateBodyData(userId: String, height: Double, weight: Double){
         val bodyData = BodyDataDetail(height, weight)
-        handleBodyData(userId, date, bodyData)
+        handleBodyData(userId, bodyData)
     }
 
     fun removeBodyData(userId: String, date: String){
@@ -297,6 +342,80 @@ object FirebaseRepository {
             .child(date)
             .removeValue()
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    fun getStretchData(userId: String, date: String){
+        reference.child("stretch_data").child(userId).child(date).get().addOnSuccessListener { snapShot->
+            val time = snapShot.child("time").value.toString().toInt()
+            val stretchData = StretchDataDetail(time = time)
+            stretchDataListener!!.onStretchDataCaught(stretchData)
+        }
+    }
+
+    fun getWeekStretchData(userId: String, lastDate: LocalDate) {
+        reference.get().addOnSuccessListener { snapShot ->
+            val userStretchData = snapShot.child("stretch_data").child(userId)
+            val tempWeekData = ArrayList<Int>()
+            val dayOfWeek = lastDate.dayOfWeek.value // 월(1) ~ 일(7)
+            for(i in 0 until 7) {
+                val date = lastDate.minusDays(i.toLong()).format(DateTimeFormatter.ISO_LOCAL_DATE) as String
+                if(userStretchData.child(date).value == null || userStretchData.child(date).value.toString() == "null"){
+                    tempWeekData.add(0)
+                }
+                else{
+                    val time = userStretchData.child(date).child("time").value.toString().toInt()
+                    tempWeekData.add(time)
+                }
+            }
+            //val walkWeekData = tempWeekData.subList(tempWeekData.lastIndex, 0) as ArrayList<Double>
+            stretchWeekDataListener!!.onStretchWeekDataCaught(tempWeekData.reversed() as ArrayList<Int>, dayOfWeek)
+
+        }
+    }
+
+    fun addStretchData(userId: String, date: String, time: Int) {
+        val stretchData = StretchDataDetail(time)
+        reference.child("stretch_data").child(userId).child(date).get().addOnSuccessListener { snapShot ->
+            if(!snapShot.exists()) {
+                reference.child("stretch_data")
+                    .child(userId)
+                    .child(date)
+                    .setValue(stretchData)
+            }
+            else {
+                val oldTime = snapShot.child("time").value.toString().toInt()
+                val sumTime = oldTime + time
+                val newStretchData = StretchDataDetail(sumTime)
+                reference.child("stretch_data")
+                    .child(userId)
+                    .child(date)
+                    .setValue(newStretchData)
+            }
+        }
+    }
+
+    fun updateStretchData(userId: String, date: String, time: Int) {
+        val stretchData = StretchDataDetail(time)
+        reference.child("stretch_data").child(userId).child(date).get().addOnSuccessListener { snapShot ->
+            if(!snapShot.exists()) {
+                reference.child("stretch_data")
+                    .child(userId)
+                    .child(date)
+                    .setValue(stretchData)
+            }
+            else {
+                val oldTime = snapShot.child("time").value.toString().toInt()
+                val sumTime = oldTime + time
+                val newStretchData = StretchDataDetail(sumTime)
+                reference.child("stretch_data")
+                    .child(userId)
+                    .child(date)
+                    .setValue(newStretchData)
+            }
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
     fun getUserInfo(user: FirebaseUser){
@@ -336,10 +455,11 @@ object FirebaseRepository {
         reference.get().addOnSuccessListener { snapShot->
             //Log.d("snapshot.value",snapShot.value.toString())
             val dataArray = ArrayList<String>()
-            val bodySnapShot = snapShot.child("body_data").child(userId).child(date)
+            val bodySnapShot = snapShot.child("body_data").child(userId)
             val userSnapShot = snapShot.child("users").child(userId)
             val waterSnapShot = snapShot.child("water_data").child(userId).child(date)
             val walkSnapShot = snapShot.child("walk_data").child(userId).child(date)
+            val stretchSnapShot = snapShot.child("stretch_data").child(userId).child(date)
             val height = bodySnapShot.child("height").value.toString()
             val weight = bodySnapShot.child("weight").value.toString()
             val nickName = userSnapShot.child("nick_name").value.toString()
@@ -349,6 +469,7 @@ object FirebaseRepository {
             val quantity = waterSnapShot.child("quantity").value.toString()
             val recentTime = waterSnapShot.child("recent_time").value.toString()
             val drinkMemo = waterSnapShot.child("memo").value.toString()
+            val stretchTime = stretchSnapShot.child("time").value.toString()
             dataArray.apply {
                 add(height)
                 add(weight)
@@ -359,6 +480,7 @@ object FirebaseRepository {
                 add(quantity)
                 add(recentTime)
                 add(drinkMemo)
+                add(stretchTime)
             }
             var i = 0
             val nullIndexArray = ArrayList<Int>()
@@ -375,7 +497,8 @@ object FirebaseRepository {
                 val userData = UserData(userId, nickName)
                 val waterData = WaterDataDetail(quantity.toInt(), drinkMemo, recentTime)
                 val walkData = WalkDataDetail(stepCount.toInt(), kcalConsumed.toDouble(), walkMemo)
-                totalDataListener!!.onTotalDataCaught(userData, bodyData, waterData, walkData)
+                val stretchData = StretchDataDetail(stretchTime.toInt())
+                totalDataListener!!.onTotalDataCaught(userData, bodyData, waterData, walkData, stretchData)
             }
             else{
                 val time = getCurrentTime()
@@ -388,7 +511,7 @@ object FirebaseRepository {
                         0, 1 -> {
                             if(flagBody){
                                 Log.d("getTotalData", "updateBodyData")
-                                updateBodyData(userId, date ,0.0, 0.0)
+                                updateBodyData(userId,0.0, 0.0)
                                 flagBody = false
                             }
                         }
@@ -406,6 +529,10 @@ object FirebaseRepository {
                                 updateDrinkData(userId, date, time, 0, "")
                                 flagWater = false
                             }
+                        }
+                        9->{
+                            Log.d("getTotalData", "updateStretchData")
+                            updateStretchData(userId, date, 0)
                         }
                     }
                 }
@@ -431,6 +558,8 @@ object FirebaseRepository {
         //Log.d("TIME::", time)
         return time
     }
+
+
 
     data class FUser(val nickName: String)
 

@@ -20,6 +20,7 @@ import com.google.android.gms.fitness.data.DataType.TYPE_STEP_COUNT_DELTA
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.gs.gunsal.dataClass.BodyDataDetail
 import com.gs.gunsal.dataClass.UserData
 import com.gs.gunsal.databinding.ActivityLoginBinding
 
@@ -110,11 +111,27 @@ class LoginActivity : AppCompatActivity() {
             FirebaseRepository.userDataListener = object : FirebaseRepository.OnUserDataListener {
                 override fun onUserDataCaught(userData: UserData, isFirst: Boolean) {
                     Log.d("toMainActivity->onUserDataCaught", "success")
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    intent.putExtra("USER_ID", userData.user_id)
-                    intent.putExtra("USER_NICK_NAME", userData.nick_name)
-                    startActivity(intent)
-                    finish()
+                    FirebaseRepository.getBodyData(user.uid)
+                    FirebaseRepository.bodyDataListener =
+                        object : FirebaseRepository.OnBodyDataListener {
+                            override fun onBodyDataCaught(bodyDataDetail: BodyDataDetail) {
+                                if(bodyDataDetail.height == 0.0 || bodyDataDetail.weight == 0.0){
+                                    Log.d("toMainActivity-> onBodyDataCaught", "NO BODY INFO")
+                                    val intent = Intent(this@LoginActivity, ProfileActivity::class.java)
+                                    intent.putExtra("USER_ID", user.uid)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                else{
+                                    Log.d("toMainActivity-> onBodyDataCaught", "ALL INFO STATUS GOOD. GO TO MAIN")
+                                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                    intent.putExtra("USER_ID", userData.user_id)
+                                    intent.putExtra("USER_NICK_NAME", userData.nick_name)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            }
+                        }
                 }
 
                 override fun onUserDataUncaught(user: FirebaseUser) {
@@ -135,11 +152,6 @@ class LoginActivity : AppCompatActivity() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-    // signIn End
-
-//    override fun onClick(p0: View?) {
-//    }
-
 
     private fun signOut() { // 로그아웃
         // Firebase sign out
@@ -150,37 +162,4 @@ class LoginActivity : AppCompatActivity() {
             //updateUI(null)
         }
     }
-
-    private fun revokeAccess() { //회원탈퇴
-        // Firebase sign out
-        firebaseAuth.signOut()
-        googleSignInClient.revokeAccess().addOnCompleteListener(this) {
-            FirebaseRepository.removeUser(firebaseAuth.uid!!)
-        }
-    }
-//
-//    lateinit var binding: ActivityLoginBinding
-//    var fitnessOptions: FitnessOptions = FitnessOptions.builder()
-//        .addDataType(TYPE_STEP_COUNT_CUMULATIVE)
-//        .addDataType(TYPE_STEP_COUNT_DELTA)
-//        .build()
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityLoginBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//        init()
-//
-//    }
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this))) {
-//            startActivity(Intent(this, ProfileActivity::class.java))
-//            finish()
-//        }
-//    }
-//    private fun init() {
-//        binding.setProfile.setOnClickListener {
-//            GoogleSignIn.requestPermissions(this, 100, GoogleSignIn.getLastSignedInAccount(this))
-//        }
-//    }
 }
