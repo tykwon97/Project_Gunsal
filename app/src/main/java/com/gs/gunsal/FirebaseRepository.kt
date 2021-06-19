@@ -437,7 +437,7 @@ object FirebaseRepository {
             Log.d("getUserInfo", "$userId, $nickName")
             if(userId == "null" || nickName == "null" || age == "null"){
                 enrollUser(user.uid, user.displayName.toString(), 0)
-                val userData = UserData(userId, nickName, age.toInt())
+                val userData = UserData(userId, nickName, 0)
                 userDataListener!!.onUserDataCaught(userData, true)
             }
             else {

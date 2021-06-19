@@ -46,8 +46,6 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
         // Inflate the layout for this fragment
         binding = FragmentTodayViewerBinding.inflate(layoutInflater, container, false)
         return binding!!.root
@@ -68,6 +66,11 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     override fun onWaterDataCaught(waterDataDetail: WaterDataDetail) {
                         val allwater:Float = (waterDataDetail.quantity.toFloat()/1000.0).toFloat()
                         todayWaterNumber.text = (floor(allwater*100)/100).toString()
+                        if(waterDataDetail.quantity.toFloat()>=2000.0){
+                            binding!!.todayWaterBarColor.width=657
+                        }else{
+                            binding!!.todayWaterBarColor.width=((waterDataDetail.quantity.toFloat()/2000)*656.25).toInt()
+                        }
                     }
                 }
                 (activity as MainActivity).waternoti()

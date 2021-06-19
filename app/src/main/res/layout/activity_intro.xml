@@ -3,11 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/btnss"
-        android:layout_width="wrap_content"
-        android:text="dsa"
-        android:layout_height="wrap_content"/>
 
     <ImageView
         android:layout_width="200dp"
@@ -15,6 +10,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:src="@drawable/intro_title" />
+
     <ImageView
         android:layout_width="250dp"
         android:layout_height="250dp"

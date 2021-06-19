@@ -28,10 +28,7 @@ class Intro_Activity : AppCompatActivity() {
         binding = ActivityIntroBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnss.setOnClickListener {
-            Toast.makeText(this, "입력", Toast.LENGTH_SHORT).show()
 
-        }
         var str = resources.getStringArray(R.array.famous_saying)
         binding.text.text = "''"+str[Random.nextInt(str.size)]+ "''"
         //Google 로그인 옵션 구성. requestIdToken 및 Email 요청
