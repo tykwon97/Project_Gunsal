@@ -126,8 +126,10 @@ class Setting_Fragment(val userId: String) : Fragment() {
     private fun revokeAccess() { //회원탈퇴
         // Firebase sign out
         //googleSignInClient.signOut().addOnCompleteListener {
+            firebaseAuth.signOut()
             firebaseAuth.currentUser!!.delete().addOnCompleteListener {
                 FirebaseRepository.removeUser(userId)
+
                 val intent = Intent(requireActivity(), LoginActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
@@ -157,7 +159,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
         FirebaseRepository.userDataListener = object: FirebaseRepository.OnUserDataListener{
             override fun onUserDataCaught(userData: UserData, isFirst: Boolean){
                 binding!!.apply {
-                    userEmail.text = userData.user_id
+                    userEmail.text = userData.age.toString() + "세"
                     userName.text = userData.nick_name
                 }
             }

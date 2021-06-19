@@ -41,9 +41,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
-    lateinit var userId: String
-    lateinit var nickName: String
-    var timer: Timer? = null
+    lateinit var userId : String
+    lateinit var nickName : String
+    var timer: Timer?= null
 
     val textarr = arrayListOf<String>("오늘의기록", "월간통계", "건강뉴스", "스트레칭", "설정")
     val iconarr = arrayListOf<Int>(
@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         R.drawable.ic_setting
     )
     lateinit var binding: ActivityMainBinding
-
     //~~~~~~~~~~~~~~~~~~~~태윤~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //센서 연결을 위한 변수
     private var sensorManager: SensorManager? = null
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     //현재 걸음 수(출력되는 값)
     private var mSteps = 0
-
     //리스너가 등록되고 난 후의 step count(언제 지정할지 값)
     private var mCounterSteps = 0
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,26 +76,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         userId = intent.getStringExtra("USER_ID").toString()
 //~~~~~~~~~~~~~~~~~~~~태윤~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //저장된 값 가져오기
-        mSteps = App.prefs1.myIndex1!!
+        mSteps =  App.prefs1.myIndex1!!
         mCounterSteps = App.prefs2.myIndex2!!
-        Log.i("prefs1", mSteps.toString())
-        Log.i("prefs2", mCounterSteps.toString())
+        Log.i("prefs1",mSteps.toString())
+        Log.i("prefs2",mCounterSteps.toString())
         //binding.walknum.setText(mSteps.toString())//shared preference 받는 곳
 
         //만보기
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
             Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' NOT GRANTED");
             //ask for permission
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), TYPE_STEP_COUNTER
-            )
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), TYPE_STEP_COUNTER)
             //requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PHYISCAL_ACTIVITY);
-        } else {
+        }else
+        {
             Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' GRANTED");
         }
 
@@ -109,17 +103,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
         //알림 버튼 확인시 이전 데이터 가져오기
-        val step = intent.getIntExtra("walking_msteps", -1)
-        val counterstep = intent.getIntExtra("walking_mcountersteps", -1)
+        val step = intent.getIntExtra("walking_msteps",-1)
+        val counterstep = intent.getIntExtra("walking_mcountersteps",-1)
         if (step != -1 && counterstep != -1) {
             mCounterSteps = counterstep
             mSteps = step
             //binding.walknum.setText(step.toString())
-            Log.i("str : ", step.toString())
+            Log.i("str : ",step.toString())
         }
         binding.apply {
             //walknum.setText(Integer.toString(mSteps))
         }
+        //service작업 시작
+        val intent = Intent(this, WalkingService::class.java)
+        intent.putExtra("USER_ID", userId)
+        intent.putExtra("walking", mSteps)
+        intent.putExtra("counterstep", mCounterSteps)
+        startService(intent)
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         init()
     }
@@ -127,13 +127,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private fun initNaver() {
         NaverRepository.getSearchNews("건강", ::onSearchNewsFetched, ::onError)
     }
-
     fun onSearchNewsFetched(list: List<Items>) {
-        for (n in list) {
+        for(n in list){
             titleArrayList.add(n.title)
-            linkArrayList.add(n.originallink)
+            linkArrayList.add(n.link)
             Log.i("mainLink", n.title)
-            Log.i("mainLink", n.originallink)
+            Log.i("mainLink", n.link)
         }
     }
 
@@ -170,13 +169,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         })
     }
-
-    fun tabbargone() {
-        binding.myTabIconview.visibility = View.GONE
+    fun tabbargone(){
+        binding.myTabIconview.visibility= View.GONE
     }
-
-    fun tabbarvisible() {
-        binding.myTabIconview.visibility = View.VISIBLE
+    fun tabbarvisible(){
+        binding.myTabIconview.visibility= View.VISIBLE
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~태윤~~~~~~~~~~~~~~~~~~~~~~~
@@ -207,19 +204,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
             //파이어베이스에 저장
             //FirebaseRepository.updateWalkingData("201710561",FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
-            FirebaseRepository.updateWalkingData(
-                userId,
-                FirebaseRepository.getCurrentDate(),
-                mSteps,
-                10.0,
-                "test"
-            )
+            FirebaseRepository.updateWalkingData(userId,FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
             //값 저장해두기
             App.prefs1.myIndex1 = mSteps
             App.prefs2.myIndex2 = mCounterSteps
         }
     }
-
     //센서 정밀도가 변경되면 호출됨
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         //TODO("Not yet implemented")
@@ -237,14 +227,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         //sensorManager?.unregisterListener(this)
         //unregisterReceiver(receiver)
     }
 
-    fun waternoti() { //수분섭취 아이콘 클릭한 경우 fragment에서 호출됨
+    fun waternoti(){ //수분섭취 아이콘 클릭한 경우 fragment에서 호출됨
         if (timer != null) { //타이머가 이미 존재하는 경우 초기화 시켜주기
             timer!!.cancel()
         }
@@ -276,7 +265,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         var message = "이제 물 마셔야 할 시간입니다! 수분 공급해주세요! "
 
         val builder = NotificationCompat.Builder(applicationContext, id)
-            .setSmallIcon(R.drawable.today_water_icon) //알림 이미지
+            .setSmallIcon(R.drawable.today_icon) //알림 이미지
             .setContentTitle("수분 섭취 알림")
             .setContentText(message)
             .setAutoCancel(true) //알림 클릭시 삭제 여부

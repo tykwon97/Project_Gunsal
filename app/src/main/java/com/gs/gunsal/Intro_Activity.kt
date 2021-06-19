@@ -27,10 +27,6 @@ class Intro_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityIntroBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Handler().postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }, 3000L)
 
         binding.btnss.setOnClickListener {
             Toast.makeText(this, "입력", Toast.LENGTH_SHORT).show()
@@ -39,7 +35,7 @@ class Intro_Activity : AppCompatActivity() {
         var str = resources.getStringArray(R.array.famous_saying)
         binding.text.text = "''"+str[Random.nextInt(str.size)]+ "''"
         //Google 로그인 옵션 구성. requestIdToken 및 Email 요청
-        /*val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("895742237394-pii5o2pv9ed6ieeri5nr3echckntl46r.apps.googleusercontent.com")
             //'R.string.default_web_client_id' 에는 본인의 클라이언트 아이디를 넣어주시면 됩니다.
             //저는 스트링을 따로 빼서 저렇게 사용했지만 스트링을 통째로 넣으셔도 됩니다.
@@ -51,10 +47,10 @@ class Intro_Activity : AppCompatActivity() {
         //firebase auth 객체
         firebaseAuth = FirebaseAuth.getInstance()
 
-        initIntro()*/
+        //initIntro()
     }
 
-/*    public override fun onStart() {
+    public override fun onStart() {
         super.onStart()
         val account = GoogleSignIn.getLastSignedInAccount(this)
         //signOut()
@@ -67,7 +63,7 @@ class Intro_Activity : AppCompatActivity() {
             val intent = Intent(this@Intro_Activity, LoginActivity::class.java)
             startActivity(intent)
         }
-    } //onStart End*/
+    } //onStart End
 
     private fun signOut() { // 로그아웃
         // Firebase sign out
@@ -103,7 +99,7 @@ class Intro_Activity : AppCompatActivity() {
                 }
 
                 override fun onUserDataUncaught(user: FirebaseUser) {
-                    FirebaseRepository.enrollUser(user.uid.toString(), user.displayName.toString())
+                    FirebaseRepository.enrollUser(user.uid.toString(), user.displayName.toString(), 0)
                     FirebaseRepository.getTotalData(user.uid, FirebaseRepository.getCurrentDate())
                     FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
                         override fun onTotalDataCaught(
@@ -124,16 +120,4 @@ class Intro_Activity : AppCompatActivity() {
             }
         }
     } // toMainActivity End
-
-    private fun initIntro() {
-
-//            if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this))) {
-//            } else {
-//
-//                Handler().postDelayed({
-//                    startActivity(Intent(this, MainActivity::class.java))
-//                    finish()
-//                }, 3000L)
-//            }
-    }
 }
