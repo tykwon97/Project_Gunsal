@@ -26,6 +26,7 @@
         app:mcv_showOtherDates="all"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        app:mcv_showOtherDates="all"
         android:layout_marginTop="120dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

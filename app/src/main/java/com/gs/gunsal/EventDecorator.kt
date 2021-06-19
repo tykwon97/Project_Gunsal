@@ -19,7 +19,7 @@ class EventDecorator(dates: CalendarDay, context: Context, color: Int) :
     }
 
     override fun shouldDecorate(day: CalendarDay): Boolean {
-        Log.i("dates", dates.toString())
+        //Log.i("dates", dates.toString())
         return day.equals(dates)
     }
 

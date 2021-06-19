@@ -89,6 +89,7 @@ class Health_News_Fragment : Fragment() {
                 binding!!.gridrecyclerview.visibility = View.VISIBLE
                 binding!!.gridtext.visibility = View.VISIBLE
                 binding!!.filter.visibility = View.VISIBLE
+                binding!!.fab.visibility=View.GONE
             } else {
                 binding!!.gridrecyclerview.visibility = View.GONE
                 binding!!.color.visibility = View.GONE
@@ -142,6 +143,7 @@ class Health_News_Fragment : Fragment() {
             binding!!.gridtext.visibility = View.GONE
             binding!!.filter.visibility = View.GONE
             binding!!.color.visibility = View.GONE
+            binding!!.fab.visibility=View.VISIBLE
         }
         binding!!.gridrecyclerview.adapter = myadapter
     }

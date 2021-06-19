@@ -106,16 +106,16 @@ class LoginActivity : AppCompatActivity() {
 
     // toMainActivity
     fun toMainActivity(user: FirebaseUser?) {
-        if(user !=null) { // MainActivity 로 이동
+        if(user != null) { // MainActivity 로 이동
             FirebaseRepository.getUserInfo(user)
             FirebaseRepository.userDataListener = object : FirebaseRepository.OnUserDataListener {
                 override fun onUserDataCaught(userData: UserData, isFirst: Boolean) {
                     Log.d("toMainActivity->onUserDataCaught", "success")
-                    FirebaseRepository.getBodyData(user.uid)
+                    FirebaseRepository.getBodyData(userData.user_id)
                     FirebaseRepository.bodyDataListener =
                         object : FirebaseRepository.OnBodyDataListener {
                             override fun onBodyDataCaught(bodyDataDetail: BodyDataDetail) {
-                                if(bodyDataDetail.height == 0.0 || bodyDataDetail.weight == 0.0){
+                                if(bodyDataDetail.height < 1.0 || bodyDataDetail.weight < 1.0){
                                     Log.d("toMainActivity-> onBodyDataCaught", "NO BODY INFO")
                                     val intent = Intent(this@LoginActivity, ProfileActivity::class.java)
                                     intent.putExtra("USER_ID", user.uid)
