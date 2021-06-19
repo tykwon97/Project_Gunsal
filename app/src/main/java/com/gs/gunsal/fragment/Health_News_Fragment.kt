@@ -152,7 +152,7 @@ class Health_News_Fragment : Fragment() {
         titleArrayList.clear()
         for (n in list) {
             titleArrayList.add(n.title)
-            linkArray.add(n.link)
+            linkArray.add(n.originallink)
         }
         adapter.itemOnClickListener = object : MyNewsRecyclerViewAdapter.OnItemClickListener {
             override fun OnItemClick(

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -48,6 +49,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTodayViewerBinding.inflate(layoutInflater, container, false)
+
         return binding!!.root
     }
     var isPageOpenWater=false
@@ -65,14 +67,15 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                 FirebaseRepository.waterDataListener = object:FirebaseRepository.OnWaterDataListener{
                     override fun onWaterDataCaught(waterDataDetail: WaterDataDetail) {
                         val allwater:Float = (waterDataDetail.quantity.toFloat()/1000.0).toFloat()
-                        todayWaterNumber.text = (floor(allwater*100)/100).toString()
+                        todayWaterNumber.text = (floor(allwater*100)/100 + 0.25).toString()
                         if(waterDataDetail.quantity.toFloat()>=2000.0){
-                            binding!!.todayWaterBarColor.width=657
+                            todayWaterBarColor.width=657
                         }else{
-                            binding!!.todayWaterBarColor.width=((waterDataDetail.quantity.toFloat()/2000)*656.25).toInt()
+                            todayWaterBarColor.width=(((waterDataDetail.quantity.toFloat()+250)/2000)*656.25).toInt()
                         }
                     }
                 }
+
                 (activity as MainActivity).waternoti()
 
             }
