@@ -7,7 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
+import android.webkit.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,11 +51,11 @@ class Health_News_Fragment : Fragment() {
 
         binding!!.webView.settings.apply {
             javaScriptEnabled = true // 웹페이지 자바스클비트 허용 여부
-            setAppCacheEnabled(true) // 브라우저 캐시 허용 여부
+            setAppCacheEnabled(false) // 브라우저 캐시 허용 여부
             setDomStorageEnabled(true) // 로컬저장소 허용 여부
             setSupportMultipleWindows(false)
+
         }
-        binding!!.webView.webChromeClient = WebChromeClient()
         init()
         return binding!!.root
     }
@@ -63,11 +63,21 @@ class Health_News_Fragment : Fragment() {
 
     private fun init() {
 
-
+        binding!!.webView.clearCache(true)
+        binding!!.webView.clearHistory()
         titleArrayList.addAll((activity as MainActivity).titleArrayList)  //초기 시작 시 받아온 뉴스를 list에 삽입
         linkArray.addAll((activity as MainActivity).linkArrayList)  //초기 시작 시 받아온 뉴스 Link list에 삽입
         adapter = MyNewsRecyclerViewAdapter(titleArrayList)
-
+        binding!!.webView.webViewClient = object : WebViewClient() {
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                Log.i("Error", error.toString())
+            }
+        }
         adapter.itemOnClickListener = object : MyNewsRecyclerViewAdapter.OnItemClickListener {
             override fun OnItemClick(
                 holder: RecyclerView.ViewHolder,
@@ -161,6 +171,7 @@ class Health_News_Fragment : Fragment() {
                 data: String,
                 position: Int
             ) {
+                binding!!.webView.webChromeClient = WebChromeClient()
                 onAttach(requireContext())
                 changeWebView(list[position].originallink)
             }
@@ -171,9 +182,11 @@ class Health_News_Fragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.i("resume", "onResume")
+        binding!!.webView.stopLoading()
         binding!!.webView.visibility = View.GONE
         binding!!.list.visibility = View.VISIBLE
         binding!!.fab.visibility = View.VISIBLE
+        binding!!.healthNews.visibility = View.VISIBLE
     }
 
     fun onError() {
@@ -187,6 +200,8 @@ class Health_News_Fragment : Fragment() {
                 binding!!.webView.visibility = View.GONE
                 binding!!.list.visibility = View.VISIBLE
                 binding!!.fab.visibility = View.VISIBLE
+                binding!!.healthNews.visibility = View.VISIBLE
+                binding!!.webView.stopLoading()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -195,16 +210,18 @@ class Health_News_Fragment : Fragment() {
 
     fun changeWebView(link: String) {   //webViewChange
 
-        binding!!.webView.webChromeClient = WebChromeClient()
+
         binding!!.webView.loadUrl(link)
         binding!!.list.visibility = View.GONE
         binding!!.fab.visibility = View.GONE
         binding!!.gridrecyclerview.visibility = View.GONE
+        binding!!.healthNews.visibility = View.GONE
         binding!!.webView.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding!!.webView.stopLoading()
         binding = null
         binding2 = null
     }
