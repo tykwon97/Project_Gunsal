@@ -8,14 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.github.mikephil.charting.utils.Utils.init
 import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
 import com.gs.gunsal.adapterPackage.MyGridViewAdapter
@@ -23,6 +20,7 @@ import com.gs.gunsal.databinding.FragmentHealthNewsListBinding
 import com.gs.gunsal.databinding.NewsKeywordItemBinding
 import com.ms129.stockPrediction.naverAPI.Items
 import com.ms129.stockPrediction.naverAPI.NaverRepository
+
 
 /**
  * A fragment representing a list of Items.
@@ -62,6 +60,7 @@ class Health_News_Fragment : Fragment() {
         return binding!!.root
     }
 
+
     private fun init() {
 
 
@@ -76,7 +75,8 @@ class Health_News_Fragment : Fragment() {
                 data: String,
                 position: Int
             ) {
-                Log.i("Link", linkArray[position].toString())
+                Log.i("Link", linkArray[position])
+                onAttach(requireContext())
                 changeWebView(linkArray[position])
             }
         }
@@ -168,6 +168,14 @@ class Health_News_Fragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i("resume", "onResume")
+        binding!!.webView.visibility = View.GONE
+        binding!!.list.visibility = View.VISIBLE
+        binding!!.fab.visibility = View.VISIBLE
+    }
+
     fun onError() {
         Log.i("error", "error")
     }
@@ -186,6 +194,8 @@ class Health_News_Fragment : Fragment() {
     }
 
     fun changeWebView(link: String) {   //webViewChange
+
+        binding!!.webView.webChromeClient = WebChromeClient()
         binding!!.webView.loadUrl(link)
         binding!!.list.visibility = View.GONE
         binding!!.fab.visibility = View.GONE
@@ -199,4 +209,3 @@ class Health_News_Fragment : Fragment() {
         binding2 = null
     }
 }
-
