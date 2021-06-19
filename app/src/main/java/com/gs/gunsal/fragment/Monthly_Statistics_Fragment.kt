@@ -102,47 +102,51 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                                 todayKcalNumber.text = walkData.kcal_consumed.toString()
 
                                 //수분섭취
-                                val allwater:Float = (waterData.quantity.toFloat()/1000.0).toFloat()
-                                todayWaterNumber.text = (floor(allwater*100) /100).toString()
+                                val allwater: Float =
+                                    (waterData.quantity.toFloat() / 1000.0).toFloat()
+                                todayWaterNumber.text = (floor(allwater * 100) / 100).toString()
                                 //2리터 기준,2000ml
-                                if(waterData.quantity.toFloat()>=2000.0){
-                                    todayWaterBarColor.width=657
-                                }else{
-                                    todayWaterBarColor.width=((waterData.quantity.toFloat()/2000)*656.25).toInt()
+                                if (waterData.quantity.toFloat() >= 2000.0) {
+                                    todayWaterBarColor.width = 657
+                                } else {
+                                    todayWaterBarColor.width =
+                                        ((waterData.quantity.toFloat() / 2000) * 656.25).toInt()
                                 }
 
                                 //걸음수
                                 todayWalkNumber.text = walkData.step_count.toString()
                                 //10000보 기준
-                                if(walkData.step_count.toInt()>=10000){
-                                    todayWalkBarColor.width=657
-                                }else{
-                                    todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
+                                if (walkData.step_count.toInt() >= 10000) {
+                                    todayWalkBarColor.width = 657
+                                } else {
+                                    todayWalkBarColor.width =
+                                        ((walkData.step_count.toFloat() / 10000) * 656.25).toInt()
 
                                 }
 
                                 //스트레칭 시간
                                 val minutes = stretchData.time / 60
-                                val sec  = (stretchData.time % 60) / 60.0
+                                val sec = (stretchData.time % 60) / 60.0
                                 val secResult = Math.round(sec * 10) / 10f
                                 val result = minutes + secResult
                                 todayStrechNumber.text = "$result"
                             }
                         }
+                    }
                 }
-            }
-            barchartAccept.setOnClickListener {
-                if (isPageOpen) {
-                    slideViewer.visibility = View.GONE
-                    todayBlackBackground.visibility = View.GONE
-                    //slideViewer.startAnimation(translatedown)
-                    (activity as MainActivity).tabbarvisible()
-                    isPageOpen = false
-                    monthly.visibility = View.VISIBLE
-                    monthlyTextColor.visibility = View.VISIBLE
+                barchartAccept.setOnClickListener {
+                    if (isPageOpen) {
+                        slideViewer.visibility = View.GONE
+                        todayBlackBackground.visibility = View.GONE
+                        //slideViewer.startAnimation(translatedown)
+                        (activity as MainActivity).tabbarvisible()
+                        isPageOpen = false
+                        monthly.visibility = View.VISIBLE
+                        monthlyTextColor.visibility = View.VISIBLE
+                    }
                 }
-            }
 
+            }
         }
     }
 
@@ -217,7 +221,6 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
             }
 
         }
-
 
     }
 

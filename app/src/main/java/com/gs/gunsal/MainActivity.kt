@@ -166,8 +166,6 @@ class MainActivity : AppCompatActivity() {
                 manager.notify(1, notification)
             }
 
-            override fun onWalkListCaught(newWalkData: ArrayList<NewWalkData>) {
-            }
         }
     }
 
