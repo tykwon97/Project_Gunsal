@@ -11,7 +11,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 
 class WalkingService : Service() {
-
+    lateinit var userId : String
     var notificationid = 100
     var mSteps= 0
     var mCounterSteps=0
@@ -30,7 +30,8 @@ class WalkingService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {//2번
         Log.i("Myservice","onStartCommand()")
         mSteps = intent!!.getIntExtra("walking",-1)
-        mCounterSteps = intent!!.getIntExtra("counterstep",-1)
+        mCounterSteps = intent.getIntExtra("counterstep",-1)
+        userId = intent.getStringExtra("USER_ID").toString()
         walkNotification()
         return super.onStartCommand(intent, flags, startId)
     }
@@ -76,6 +77,7 @@ class WalkingService : Service() {
             .setOngoing(true); //상태바에 고정
 
         val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.putExtra("USER_ID", userId)
         intent.putExtra("walking_msteps", mSteps) //key랑 message
         intent.putExtra("walking_mcountersteps", mCounterSteps)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
