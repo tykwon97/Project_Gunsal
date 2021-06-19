@@ -45,6 +45,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     lateinit var nickName : String
     var timer: Timer?= null
 
+    var waterAlarm = true
+
     val textarr = arrayListOf<String>("오늘의기록", "월간통계", "건강뉴스", "스트레칭", "설정")
     val iconarr = arrayListOf<Int>(
         R.drawable.ic_home,
@@ -242,8 +244,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         //Toast.makeText(applicationContext, "250ml 추가", Toast.LENGTH_SHORT).show()
         val timerTask = object : TimerTask() {
             override fun run() { //TimerTask에서 반드시 override 해줘야됨!
-                waterNotification()
-
+                if(waterAlarm == true){
+                    waterNotification()
+                }
             }
         }
         timer?.schedule(timerTask, 5000)//5초, 3600000(1시간)

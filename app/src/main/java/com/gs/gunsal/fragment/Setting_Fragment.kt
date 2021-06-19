@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.ktx.Firebase
 import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.LoginActivity
+import com.gs.gunsal.MainActivity
 import com.gs.gunsal.dataClass.BodyDataDetail
 import com.gs.gunsal.dataClass.UserData
 import com.gs.gunsal.databinding.FragmentSettingBinding
@@ -67,22 +68,14 @@ class Setting_Fragment(val userId: String) : Fragment() {
             with(binding!!.waterToggle){
                 if(isChecked==true){
                     Toast.makeText(requireContext(), "check!", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).waterAlarm=true
                 }else{
                     Toast.makeText(requireContext(), "not check!", Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).waterAlarm=false
                 }
             }
         }
 
-        binding!!.walkToggle.setOnClickListener {
-            with(binding!!.walkToggle){
-                if(isChecked==true){
-                    Toast.makeText(requireContext(), "check!", Toast.LENGTH_SHORT).show()
-                }else{
-
-                    Toast.makeText(requireContext(), "not check!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
 
         binding!!.withdrawal.setOnClickListener{
             revokeAccess()
@@ -120,21 +113,21 @@ class Setting_Fragment(val userId: String) : Fragment() {
                 val intent = Intent(requireActivity(), LoginActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
+                Toast.makeText(requireContext(), "로그아웃되었습니다", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun revokeAccess() { //회원탈퇴
-        // Firebase sign out
-        //googleSignInClient.signOut().addOnCompleteListener {
-            firebaseAuth.signOut()
-            firebaseAuth.currentUser!!.delete().addOnCompleteListener {
-                FirebaseRepository.removeUser(userId)
-
-                val intent = Intent(requireActivity(), LoginActivity::class.java)
-                startActivity(intent)
-                requireActivity().finish()
-            }
-            //firebaseAuth.signOut()
+        FirebaseRepository.removeUser(userId)
+        //firebaseAuth.currentUser!!.delete().addOnCompleteListener {
+        firebaseAuth.signOut()
+        googleSignInClient.revokeAccess().addOnSuccessListener {
+            val intent = Intent(requireContext().applicationContext, LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+            Toast.makeText(requireContext(), "회원탈퇴에 성공했습니다", Toast.LENGTH_SHORT).show()
+        }
+    }
 
        // }
 
@@ -146,7 +139,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
 //            startActivity(intent)
 //            onDestroy()
 //        }
-    }
+
 
     override fun onResume() {
         super.onResume()
@@ -175,7 +168,6 @@ class Setting_Fragment(val userId: String) : Fragment() {
                     weightTextView.text = "${bodyDataDetail.weight}kg"
                     heightTextView.text = "${bodyDataDetail.height}cm"
                     Log.i("body", bodyDataDetail.weight.toString())
-
                 }
             }
         }
