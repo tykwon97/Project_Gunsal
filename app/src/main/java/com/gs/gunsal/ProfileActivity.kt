@@ -22,9 +22,11 @@ class ProfileActivity : AppCompatActivity() {
     private fun init() {
         binding.submitBtn.setOnClickListener {
             if(binding.userHeight.text.isNotBlank()&&binding.userWeight.text.isNotBlank()&&binding.nickName.text.isNotBlank()){
+                val nickName = binding.nickName.text.toString()
                 val height = binding.userHeight.text.toString().toDouble()
                 val weight = binding.userWeight.text.toString().toDouble()
-                FirebaseRepository.updateBodyData(userId, FirebaseRepository.getCurrentDate(), height, weight)
+                FirebaseRepository.updateBodyData(userId, height, weight)
+                FirebaseRepository.updateUserNickName(userId, nickName)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("USER_ID", userId)
                 startActivity(intent)

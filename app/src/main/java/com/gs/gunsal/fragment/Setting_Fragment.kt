@@ -44,6 +44,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
             dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
                 val height = bindingDia!!.height.text.toString()
                 var weight = bindingDia!!.weight.text.toString()
+                FirebaseRepository.updateBodyData(userId, height.toDouble(), weight.toDouble())
                 Toast.makeText(context, "height : " + height + "weight : " + weight, Toast.LENGTH_SHORT).show()
             })
             dlg.setNegativeButton("취소", null)
@@ -103,7 +104,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
 
     private fun signOut() { // 로그아웃
         // Firebase sign out
-        val firebaseAuth = FirebaseAuth.getInstance()
+        //val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signOut()
 
         // Google sign out
@@ -119,13 +120,23 @@ class Setting_Fragment(val userId: String) : Fragment() {
 
     private fun revokeAccess() { //회원탈퇴
         // Firebase sign out
-        googleSignInClient.revokeAccess().addOnCompleteListener(requireActivity()) {
-            FirebaseRepository.removeUser(userId)
-            firebaseAuth.signOut()
-            val intent = Intent(requireActivity(), LoginActivity::class.java)
-            startActivity(intent)
-            onDestroy()
+        googleSignInClient.signOut().addOnCompleteListener {
+            firebaseAuth.currentUser!!.delete().addOnCompleteListener {
+                FirebaseRepository.removeUser(userId)
+                val intent = Intent(requireActivity(), LoginActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
+            //firebaseAuth.signOut()
         }
+//        googleSignInClient.revokeAccess().addOnCompleteListener(requireActivity()) {
+//            FirebaseRepository.removeUser(userId)
+//            firebaseAuth.currentUser!!.delete().
+//            firebaseAuth.signOut()
+//            val intent = Intent(requireActivity(), LoginActivity::class.java)
+//            startActivity(intent)
+//            onDestroy()
+//        }
     }
 
     private fun initView(userId: String) {
@@ -139,10 +150,10 @@ class Setting_Fragment(val userId: String) : Fragment() {
             }
 
             override fun onUserDataUncaught(user: FirebaseUser) {
-                TODO("Not yet implemented")
+                // Doesn't need
             }
         }
-        FirebaseRepository.getBodyData(userId, FirebaseRepository.getCurrentDate())
+        FirebaseRepository.getBodyData(userId)
         FirebaseRepository.bodyDataListener = object: FirebaseRepository.OnBodyDataListener{
             override fun onBodyDataCaught(bodyDataDetail: BodyDataDetail) {
                 binding!!.apply {

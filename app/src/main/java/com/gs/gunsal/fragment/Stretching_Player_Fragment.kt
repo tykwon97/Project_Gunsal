@@ -10,13 +10,14 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.adapterPackage.MyStretChingAdapter
 import com.gs.gunsal.databinding.FragmentStretchingPlayerListBinding
 
 /**
  * A fragment representing a list of Items.
  */
-class Stretching_Player_Fragment : Fragment() {
+class Stretching_Player_Fragment(val userId: String) : Fragment() {
 
     lateinit var binding: FragmentStretchingPlayerListBinding
     var start: Long = 0
@@ -63,7 +64,9 @@ class Stretching_Player_Fragment : Fragment() {
         super.onPause()
         Log.i("onDetach", "onDetach")
         var end = System.currentTimeMillis()
-        Log.i("onDetach", ((end - start) / 1000).toString())
+        val totalTime = (end - start) / 1000
+        FirebaseRepository.updateStretchData(userId, FirebaseRepository.getCurrentDate(), totalTime.toInt())
+        Log.i("onDetach", totalTime.toString())
         start = 0
     }
 

@@ -13,10 +13,7 @@ import com.gs.gunsal.EventDecorator
 import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
-import com.gs.gunsal.dataClass.BodyDataDetail
-import com.gs.gunsal.dataClass.UserData
-import com.gs.gunsal.dataClass.WalkDataDetail
-import com.gs.gunsal.dataClass.WaterDataDetail
+import com.gs.gunsal.dataClass.*
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
@@ -25,7 +22,7 @@ import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 import kotlin.math.floor
 
-class Monthly_Statistics_Fragment : Fragment() {
+class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
 
     var binding: FragmentMonthlyStatisticsBinding? = null
 
@@ -41,10 +38,12 @@ class Monthly_Statistics_Fragment : Fragment() {
 
     var isPageOpen = false
 
-
+    /*
+    * 기본 아이디어
+    * 1. 현재 달: 일단 현재 날짜를 가져온 뒤 그 날짜 숫자 만큼 for문을 돌아 1일 까지의 데이터를 가져옴
+    * 2. 이전 달: 현재 날짜에 해당하는 달의 이전(-n)달의 끝 날을 구한 뒤 그 날짜 숫자 만큼 for문을 돌아 1일까지의 데이터를 가져옴*/
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val result = arrayOf("2021,04,01", "2021,04,10", "2021,04,18", "2021,06,19")
         ApiSimulator(result).executeOnExecutor(Executors.newSingleThreadExecutor())
         val translatedown = AnimationUtils.loadAnimation(getContext(), R.anim.translate_down)
@@ -89,41 +88,45 @@ class Monthly_Statistics_Fragment : Fragment() {
 
 
                     FirebaseRepository.getTotalData("201710561", today)
-                    FirebaseRepository.totalDataListener =
-                        object : FirebaseRepository.OnTotalDataListener {
-                            override fun onTotalDataCaught(
-                                userData: UserData,
-                                bodyData: BodyDataDetail,
-                                waterData: WaterDataDetail,
-                                walkData: WalkDataDetail
-                            ) {
-                                binding!!.apply {
-                                    //칼로리
-                                    todayKcalNumber.text = walkData.kcal_consumed.toString()
 
-                                    //수분섭취
-                                    val allwater: Float =
-                                        (waterData.quantity.toFloat() / 1000.0).toFloat()
-                                    todayWaterNumber.text = (floor(allwater * 100) / 100).toString()
-                                    //2리터 기준,2000ml
-                                    if (waterData.quantity.toFloat() >= 2000.0) {
-                                        todayWaterBarColor.width = 657
-                                    } else {
-                                        todayWaterBarColor.width =
-                                            ((waterData.quantity.toFloat() / 2000) * 656.25).toInt()
-                                    }
+                    FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
+                        override fun onTotalDataCaught(
+                            userData: UserData,
+                            bodyData: BodyDataDetail,
+                            waterData: WaterDataDetail,
+                            walkData: WalkDataDetail,
+                            stretchData: StretchDataDetail
+                        ) {
+                            binding!!.apply {
+                                //칼로리
+                                todayKcalNumber.text = walkData.kcal_consumed.toString()
 
-                                    //걸음수
-                                    todayWalkNumber.text = walkData.step_count.toString()
-                                    //10000보 기준
-                                    if (walkData.step_count.toInt() >= 10000) {
-                                        todayWalkBarColor.width = 657
-                                    } else {
-                                        todayWalkBarColor.width =
-                                            ((walkData.step_count.toFloat() / 10000) * 656.25).toInt()
-
-                                    }
+                                //수분섭취
+                                val allwater:Float = (waterData.quantity.toFloat()/1000.0).toFloat()
+                                todayWaterNumber.text = (floor(allwater*100) /100).toString()
+                                //2리터 기준,2000ml
+                                if(waterData.quantity.toFloat()>=2000.0){
+                                    todayWaterBarColor.width=657
+                                }else{
+                                    todayWaterBarColor.width=((waterData.quantity.toFloat()/2000)*656.25).toInt()
                                 }
+
+                                //걸음수
+                                todayWalkNumber.text = walkData.step_count.toString()
+                                //10000보 기준
+                                if(walkData.step_count.toInt()>=10000){
+                                    todayWalkBarColor.width=657
+                                }else{
+                                    todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
+
+                                }
+
+                                //스트레칭 시간
+                                val minutes = stretchData.time / 60
+                                val sec  = (stretchData.time % 60) / 60.0
+                                val secResult = Math.round(sec * 10) / 10f
+                                val result = minutes + secResult
+                                todayStrechNumber.text = "$result"
                             }
                         }
                 }
