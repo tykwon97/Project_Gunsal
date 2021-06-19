@@ -42,10 +42,15 @@ class Setting_Fragment(val userId: String) : Fragment() {
             val dlg = AlertDialog.Builder(requireContext())
             dlg.setView(bindingDia!!.root)
             dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
-                val height = bindingDia!!.height.text.toString()
-                var weight = bindingDia!!.weight.text.toString()
-                FirebaseRepository.updateBodyData(userId, height.toDouble(), weight.toDouble())
-                Toast.makeText(context, "height : " + height + "weight : " + weight, Toast.LENGTH_SHORT).show()
+
+                if(bindingDia!!.height.text.isNotBlank()&&bindingDia!!.weight.text.isNotBlank()) {
+                    val height = bindingDia!!.height.text.toString()
+                    var weight = bindingDia!!.weight.text.toString()
+                    binding!!.heightTextView.text = height + "cm"
+                    binding!!.weightTextView.text = weight + "kg"
+                    FirebaseRepository.updateBodyData(userId, height.toDouble(), weight.toDouble())
+                    Toast.makeText(context, "height : " + height + "weight : " + weight, Toast.LENGTH_SHORT).show()
+                }
             })
             dlg.setNegativeButton("취소", null)
             dlg.show()
@@ -139,6 +144,12 @@ class Setting_Fragment(val userId: String) : Fragment() {
 //        }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i("resume", "resume")
+        initView(userId)
+    }
+
     private fun initView(userId: String) {
         FirebaseRepository.getUserInfoByID(userId)
         FirebaseRepository.userDataListener = object: FirebaseRepository.OnUserDataListener{
@@ -159,6 +170,8 @@ class Setting_Fragment(val userId: String) : Fragment() {
                 binding!!.apply {
                     weightTextView.text = "${bodyDataDetail.weight}kg"
                     heightTextView.text = "${bodyDataDetail.height}cm"
+                    Log.i("body", bodyDataDetail.weight.toString())
+
                 }
             }
         }

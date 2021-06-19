@@ -87,7 +87,6 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gmarketsans_bold"
                 android:gravity="center"
-                android:text="177cm"
                 android:textColor="@color/black"
                 android:textSize="9pt" />
 
@@ -108,7 +107,6 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gmarketsans_bold"
                 android:gravity="center"
-                android:text="65kg"
                 android:textColor="@color/black"
                 android:textSize="9pt" />
 

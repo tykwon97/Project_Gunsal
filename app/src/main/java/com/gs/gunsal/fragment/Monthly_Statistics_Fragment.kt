@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gs.gunsal.EventDecorator
-import com.gs.gunsal.FirebaseRepository
-import com.gs.gunsal.MainActivity
-import com.gs.gunsal.R
+import com.gs.gunsal.*
 import com.gs.gunsal.dataClass.*
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -85,64 +82,66 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                             today =
                                 date.year.toString() + "-" + (date.month + 1).toString() + "-" + date.day.toString()
                     }
-
-
                     FirebaseRepository.getTotalData("201710561", today)
 
-                    FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
-                        override fun onTotalDataCaught(
-                            userData: UserData,
-                            bodyData: BodyDataDetail,
-                            waterData: WaterDataDetail,
-                            walkData: WalkDataDetail,
-                            stretchData: StretchDataDetail
-                        ) {
-                            binding!!.apply {
-                                //칼로리
-                                todayKcalNumber.text = walkData.kcal_consumed.toString()
+                    FirebaseRepository.totalDataListener =
+                        object : FirebaseRepository.OnTotalDataListener {
+                            override fun onTotalDataCaught(
+                                userData: UserData,
+                                bodyData: BodyDataDetail,
+                                waterData: WaterDataDetail,
+                                walkData: WalkDataDetail,
+                                stretchData: StretchDataDetail
+                            ) {
+                                binding!!.apply {
+                                    //칼로리
+                                    todayKcalNumber.text = walkData.kcal_consumed.toString()
 
-                                //수분섭취
-                                val allwater:Float = (waterData.quantity.toFloat()/1000.0).toFloat()
-                                todayWaterNumber.text = (floor(allwater*100) /100).toString()
-                                //2리터 기준,2000ml
-                                if(waterData.quantity.toFloat()>=2000.0){
-                                    todayWaterBarColor.width=657
-                                }else{
-                                    todayWaterBarColor.width=((waterData.quantity.toFloat()/2000)*656.25).toInt()
+                                    //수분섭취
+                                    val allwater: Float =
+                                        (waterData.quantity.toFloat() / 1000.0).toFloat()
+                                    todayWaterNumber.text = (floor(allwater * 100) / 100).toString()
+                                    //2리터 기준,2000ml
+                                    if (waterData.quantity.toFloat() >= 2000.0) {
+                                        todayWaterBarColor.width = 657
+                                    } else {
+                                        todayWaterBarColor.width =
+                                            ((waterData.quantity.toFloat() / 2000) * 656.25).toInt()
+                                    }
+
+                                    //걸음수
+                                    todayWalkNumber.text = walkData.step_count.toString()
+                                    //10000보 기준
+                                    if (walkData.step_count.toInt() >= 10000) {
+                                        todayWalkBarColor.width = 657
+                                    } else {
+                                        todayWalkBarColor.width =
+                                            ((walkData.step_count.toFloat() / 10000) * 656.25).toInt()
+
+                                    }
+
+                                    //스트레칭 시간
+                                    val minutes = stretchData.time / 60
+                                    val sec = (stretchData.time % 60) / 60.0
+                                    val secResult = Math.round(sec * 10) / 10f
+                                    val result = minutes + secResult
+                                    todayStrechNumber.text = "$result"
                                 }
-
-                                //걸음수
-                                todayWalkNumber.text = walkData.step_count.toString()
-                                //10000보 기준
-                                if(walkData.step_count.toInt()>=10000){
-                                    todayWalkBarColor.width=657
-                                }else{
-                                    todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
-
-                                }
-
-                                //스트레칭 시간
-                                val minutes = stretchData.time / 60
-                                val sec  = (stretchData.time % 60) / 60.0
-                                val secResult = Math.round(sec * 10) / 10f
-                                val result = minutes + secResult
-                                todayStrechNumber.text = "$result"
                             }
                         }
                 }
-            }
-            barchartAccept.setOnClickListener {
-                if (isPageOpen) {
-                    slideViewer.visibility = View.GONE
-                    todayBlackBackground.visibility = View.GONE
-                    //slideViewer.startAnimation(translatedown)
-                    (activity as MainActivity).tabbarvisible()
-                    isPageOpen = false
-                    monthly.visibility = View.VISIBLE
-                    monthlyTextColor.visibility = View.VISIBLE
+                barchartAccept.setOnClickListener {
+                    if (isPageOpen) {
+                        slideViewer.visibility = View.GONE
+                        todayBlackBackground.visibility = View.GONE
+                        //slideViewer.startAnimation(translatedown)
+                        (activity as MainActivity).tabbarvisible()
+                        isPageOpen = false
+                        monthly.visibility = View.VISIBLE
+                        monthlyTextColor.visibility = View.VISIBLE
+                    }
                 }
             }
-
         }
     }
 
@@ -172,6 +171,7 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                 dates.add(day)
                 calendar.set(year, month - 1, dayy)
             }
+
             return dates
         }
 
@@ -186,31 +186,21 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                 var color: Int
                 when (isColor[i++]) {
                     1 -> {
-
                         color = ContextCompat.getColor(context!!, R.color.select_color)
                         binding!!.monthly.addDecorator(
-                            EventDecorator(
-                                temp,
-                                context!!, color
-                            )
+                            EventDecorator(temp, context!!, color)
                         )
                     }
                     2 -> {
                         color = ContextCompat.getColor(context!!, R.color.stretching_color)
                         binding!!.monthly.addDecorator(
-                            EventDecorator(
-                                temp,
-                                context!!, color
-                            )
+                            EventDecorator(temp, context!!, color)
                         )
                     }
                     3 -> {
                         color = ContextCompat.getColor(context!!, R.color.walk_color)
                         binding!!.monthly.addDecorator(
-                            EventDecorator(
-                                temp,
-                                context!!, color
-                            )
+                            EventDecorator(temp, context!!, color)
                         )
                     }
                 }
@@ -218,8 +208,8 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
 
         }
 
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
