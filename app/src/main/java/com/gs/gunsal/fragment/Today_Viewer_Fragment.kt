@@ -18,12 +18,13 @@ import com.github.mikephil.charting.data.BarEntry
 import com.gs.gunsal.FirebaseRepository
 import com.gs.gunsal.MainActivity
 import com.gs.gunsal.R
-import com.gs.gunsal.dataClass.BodyDataDetail
-import com.gs.gunsal.dataClass.UserData
-import com.gs.gunsal.dataClass.WalkDataDetail
-import com.gs.gunsal.dataClass.WaterDataDetail
+import com.gs.gunsal.dataClass.*
 import com.gs.gunsal.databinding.FragmentTodayViewerBinding
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import kotlin.math.floor
+import kotlin.math.roundToInt
+
 
 class Today_Viewer_Fragment(val userId: String) : Fragment() {
     var binding: FragmentTodayViewerBinding?= null
@@ -51,11 +52,21 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                 if(!isPageOpenStrech&&!isPageOpenWalk){
                     if(!isPageOpenWater){
                         isPageOpenWater=true
-                        setChartViewWater(view)
-                        (activity as MainActivity).tabbargone() //탭바사라지게게
-                        slideViewerWater.visibility=View.VISIBLE
-                        todayBlackBackground.visibility=View.VISIBLE
-                        slideViewerWater.startAnimation(translateup)
+                        val dateString = FirebaseRepository.getCurrentDate() // 2020-01-01의 String 형식
+                        val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE) // LocalDate형으로 파싱
+                        FirebaseRepository.getWeekDrinkData(userId, date)
+                        FirebaseRepository.waterWeekDataListener = object: FirebaseRepository.OnWaterWeekDataListener{
+                            override fun onWaterWeekDataCaught(
+                                weekWaterData: ArrayList<Int>,
+                                dayOfWeek: Int
+                            ) {
+                                setChartViewWater(weekWaterData, dayOfWeek)
+                                (activity as MainActivity).tabbargone() //탭바사라지게게
+                                slideViewerWater.visibility=View.VISIBLE
+                                todayBlackBackground.visibility=View.VISIBLE
+                                slideViewerWater.startAnimation(translateup)
+                            }
+                        }
                     }
                 }
 
@@ -77,18 +88,29 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                 if(!isPageOpenStrech&&!isPageOpenWater){
                     if(!isPageOpenWalk){
                         isPageOpenWalk=true
-                        setChartViewWalk(view)
-                        (activity as MainActivity).tabbargone() //탭바사라지게게
-                        slideViewerWalk.visibility=View.VISIBLE
-                        todayBlackBackground.visibility=View.VISIBLE
-                        slideViewerWalk.startAnimation(translateup)
+                        val dateString = FirebaseRepository.getCurrentDate() // 2020-01-01의 String 형식
+                        val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE) // LocalDate형으로 파싱
+                        FirebaseRepository.getWeekWalkData(userId, date)
+                        FirebaseRepository.walkWeekDataListener = object: FirebaseRepository.OnWalkWeekDataListener{
+                            override fun onWalkWeekDataCaught(
+                                weekWalkData: ArrayList<Int>,
+                                dayOfWeek: Int
+                            ) {
+                                setChartViewWalk(weekWalkData, dayOfWeek)
+                                (activity as MainActivity).tabbargone() //탭바사라지게게
+                                slideViewerWalk.visibility=View.VISIBLE
+                                todayBlackBackground.visibility=View.VISIBLE
+                                slideViewerWalk.startAnimation(translateup)
+                            }
+
+                        }
+
                     }
                 }
 
             }
             barchartAcceptWalk.setOnClickListener{
                 if(isPageOpenWalk){
-
                     slideViewerWalk.visibility=View.GONE
                     todayBlackBackground.visibility=View.GONE
                     slideViewerWalk.startAnimation(translatedown)
@@ -102,17 +124,26 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
 
             todayStrech.setOnClickListener{
                 if(!isPageOpenWalk&&!isPageOpenWater){
-
                     if(!isPageOpenStrech){
                         isPageOpenStrech=true
-                        setChartViewStrech(view)
-                        (activity as MainActivity).tabbargone() //탭바사라지게게
-                        slideViewerStrech.visibility=View.VISIBLE
-                        todayBlackBackground.visibility=View.VISIBLE
-                        slideViewerStrech.startAnimation(translateup)
+                        val dateString = FirebaseRepository.getCurrentDate() // 2020-01-01의 String 형식
+                        val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE) // LocalDate형으로 파싱
+                        FirebaseRepository.getWeekStretchData(userId, date)
+                        FirebaseRepository.stretchWeekDataListener = object: FirebaseRepository.OnStretchWeekDataListener{
+                            override fun onStretchWeekDataCaught(
+                                weekStretchData: ArrayList<Int>,
+                                dayOfWeek: Int
+                            ) {
+                                setChartViewStretch(weekStretchData, dayOfWeek)
+                                (activity as MainActivity).tabbargone() //탭바사라지게게
+                                slideViewerStrech.visibility=View.VISIBLE
+                                todayBlackBackground.visibility=View.VISIBLE
+                                slideViewerStrech.startAnimation(translateup)
+                            }
+                        }
+
                     }
                 }
-
             }
             barchartAcceptStrech.setOnClickListener{
                 if(isPageOpenStrech){
@@ -130,40 +161,6 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
     }
 
     private fun initData() {
-//        Log.e("initData", "PROGRESSING")
-//        FirebaseRepository.reference.child("walk_data").child("201710561")
-//            .child("2021-05-31").get().addOnSuccessListener { snapShot->
-//                val walkData = snapShot.child("step_count").value.toString()
-//                binding!!.todayWalkNumber.text = walkData
-//                //binding!!.todayWalkNumberDetail = walkData
-//                //10000보 기준
-//                if(walkData.toInt()>=10000){
-//                    binding!!.todayWalkBarColor.width=657
-//                }else{
-//                    binding!!.todayWalkBarColor.width=((walkData.toFloat()/10000)*656.25).toInt()
-//                }
-//
-//                // Log.e("initData", "SUCCESS")
-//
-//            }
-//        FirebaseRepository.reference.child("water_data").child("201710560")
-//            .child("2021-06-02").get().addOnSuccessListener { snapShot->
-//                val waterData = snapShot.child("quantity").value.toString()
-//                val allwater:Float = (waterData.toFloat()/1000.0).toFloat()
-//                binding!!.todayWaterNumber.text = (floor(allwater*10)/10).toString()
-//                //binding!!.todayWaterNumberDetail = waterData
-//                //2리터 기준,2000ml
-//
-//                if(waterData.toFloat()>=2000.0){
-//                    binding!!.todayWaterBarColor.width=657
-//                }else{
-//                    binding!!.todayWaterBarColor.width=((waterData.toFloat()/2000)*656.25).toInt()
-//                }
-//
-//
-//                 Log.e("initData", "SUCCESS")
-//
-//            }
         val today = FirebaseRepository.getCurrentDate()
         FirebaseRepository.getTotalData(userId, today)
         //Log.e("today", today)
@@ -172,7 +169,8 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                 userData: UserData,
                 bodyData: BodyDataDetail,
                 waterData: WaterDataDetail,
-                walkData: WalkDataDetail
+                walkData: WalkDataDetail,
+                stretchData: StretchDataDetail
             ) {
                 binding!!.apply {
                     //칼로리
@@ -198,31 +196,38 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     }else{
                         binding!!.todayWalkBarColor.width=((walkData.step_count.toFloat()/10000)*656.25).toInt()
                     }
+
+                    //스트레칭 시간
+                    val minutes = stretchData.time / 60
+                    val sec  = (stretchData.time % 60) / 60.0
+                    val secResult = Math.round(sec * 10) / 10f
+                    val result = minutes + secResult
+                    todayStrechNumber.text = "$result"
                 }
             }
         }
 
     }
-    private fun setChartViewWalk(view: View){
+    private fun setChartViewWalk(weekWalkData: ArrayList<Int>, dayOfWeek: Int){
         var walk_week= binding?.barchartWalkWeek
         if (walk_week != null) {
-            setWeek(walk_week)
+            setWeek(walk_week, weekWalkData, dayOfWeek, 1)
         }
     }
 
-    private fun setChartViewWater(view: View){
+    private fun setChartViewWater(weekWaterData: ArrayList<Int>, dayOfWeek: Int){
         var water_week= binding?.barchartWaterWeek
         if (water_week != null) {
-            setWeek(water_week)
+            setWeek(water_week, weekWaterData, dayOfWeek, 2)
         }
 
     }
 
-    private fun setChartViewStrech(view: View){
+    private fun setChartViewStretch(weekStretchData: ArrayList<Int>, dayOfWeek: Int){
 
         var strech_week= binding?.barchartStrechWeek
         if (strech_week != null) {
-            setWeek(strech_week)
+            setWeek(strech_week, weekStretchData, dayOfWeek, 3)
         }
 
     }
@@ -248,27 +253,74 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
 
     }
 
-    private fun setWeek(barChart: BarChart){
+    private fun setWeek(barChart: BarChart, weekData: ArrayList<Int>, dayOfWeek: Int, type: Int){
         initBarChart(barChart)
-
         barChart.setScaleEnabled(false)
-        val valueList=ArrayList<Double>()
+        val valueList=ArrayList<Int>()
         val entries:ArrayList<BarEntry> = ArrayList()
         val title=""
+        var sum = 0
 
-        valueList.add(600.1)
-        valueList.add(200.1)
-        valueList.add(250.1)
-        valueList.add(400.1)
-        valueList.add(150.1)
-        valueList.add(350.1)
-        valueList.add(80.1)
+        for(i in 0 until 7) {
+            valueList.add(weekData[i])
+            sum += weekData[i]
+        }
+        when(type){
+            1->{ // Walk
+                binding!!.apply {
+                    barchartBottomNameWalk.text = when(dayOfWeek){
+                        1-> "화수목금토일월"
+                        2-> "수목금토일월화"
+                        3-> "목금토일월화수"
+                        4-> "금토일월화수목"
+                        5-> "토일월화수목금"
+                        6-> "일월화수목금토"
+                        7-> "월화수목금토일"
+                        else-> "월화수목금토일"
+                    }
+                    todayWalkNumberDetail.text = (sum / 7).toString()
+                }
+            }
+            2->{ // Drink
+                binding!!.apply {
+                    barchartBottomNameWater.text = when(dayOfWeek){
+                        1-> "화수목금토일월"
+                        2-> "수목금토일월화"
+                        3-> "목금토일월화수"
+                        4-> "금토일월화수목"
+                        5-> "토일월화수목금"
+                        6-> "일월화수목금토"
+                        7-> "월화수목금토일"
+                        else-> "월화수목금토일"
+                    }
+                    val drinkSum = (sum / 7).toDouble()
+                    val drinkWeekAvg = (drinkSum).roundToInt() / 1000f
+                    todayWaterNumberDetail.text = drinkWeekAvg.toString()
+                }
+            }
+            3->{ // Stretch
+                binding!!.apply {
+                    barchartBottomNameStrech.text = when(dayOfWeek){
+                        1-> "화수목금토일월"
+                        2-> "수목금토일월화"
+                        3-> "목금토일월화수"
+                        4-> "금토일월화수목"
+                        5-> "토일월화수목금"
+                        6-> "일월화수목금토"
+                        7-> "월화수목금토일"
+                        else-> "월화수목금토일"
+                    }
+                    val time = sum / 7.0
+                    val minutes = time.toInt() / 60
+                    val sec  = (time % 60) / 60.0
+                    val secResult = (sec * 10).roundToInt() / 100f
+                    val result = minutes + secResult
+                    todayStrechNumberDetail.text = "$result"
+                    //todayStrechNumberDetail.text = (sum / 7).toString()
+                }
+            }
+        }
 
-//        val today = FirebaseRepository.getCurrentDate()
-//        val date=today.substring(8,10)
-//        val month=today.substring(5,7)
-//        Log.e("today",today)
-//        Log.e("month",month)
         for(i in 0 until valueList.size){
             val barEntry=BarEntry((i+1).toFloat(),valueList[i].toFloat())
             entries.add(barEntry)

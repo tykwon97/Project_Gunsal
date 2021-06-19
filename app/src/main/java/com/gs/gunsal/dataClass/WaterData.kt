@@ -15,3 +15,10 @@ data class WaterDataDetail(
     val memo: String,
     val recent_time: String
 ): Serializable
+
+data class NewWaterData(
+    val date: String,
+    val quantity: Int,
+    val recent_time: String,
+    val memo: String
+): Serializable

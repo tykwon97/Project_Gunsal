@@ -39,6 +39,14 @@
           }
         },
         {
+          "client_id": "895742237394-tvg8lep8bi761ouqa3h9me8f0ljmvc81.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gs.gunsal",
+            "certificate_hash": "4c2a31e616aea8a10451126a33b64750bd4d481a"
+          }
+        },
+        {
           "client_id": "895742237394-vuf3am9s9ss4rpcad674m1u7qe1a1pgp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
