@@ -32,6 +32,7 @@ import com.gs.gunsal.dataClass.WalkDataDetail
 import com.gs.gunsal.dataClass.WaterDataDetail
 import com.gs.gunsal.databinding.ActivityMainBinding
 import com.gs.gunsal.fragment.MyNewsRecyclerViewAdapter
+import com.gs.gunsal.fragment.Setting_Fragment
 import com.ms129.stockPrediction.naverAPI.Items
 import com.ms129.stockPrediction.naverAPI.NaverRepository
 import kotlinx.coroutines.CoroutineScope
@@ -123,7 +124,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     fun onSearchNewsFetched(list: List<Items>) {
         for(n in list){
             titleArrayList.add(n.title)
-            linkArrayList.add(n.originallink)
+            linkArrayList.add(n.link)
+            Log.i("mainLink", n.title)
+            Log.i("mainLink", n.link)
         }
     }
 

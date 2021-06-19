@@ -3,6 +3,7 @@ package com.gs.gunsal
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.github.mikephil.charting.utils.Utils.init
 import com.gs.gunsal.databinding.ActivityProfileBinding
@@ -25,6 +26,8 @@ class ProfileActivity : AppCompatActivity() {
                 val nickName = binding.nickName.text.toString()
                 val height = binding.userHeight.text.toString().toDouble()
                 val weight = binding.userWeight.text.toString().toDouble()
+                val age = binding.userAge.text.toString().toInt()
+                Log.i("age", age.toString())
                 FirebaseRepository.updateBodyData(userId, height, weight)
                 FirebaseRepository.updateUserNickName(userId, nickName)
                 val intent = Intent(this, MainActivity::class.java)

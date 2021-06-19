@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.gs.gunsal.EventDecorator
-import com.gs.gunsal.FirebaseRepository
-import com.gs.gunsal.MainActivity
-import com.gs.gunsal.R
+import com.gs.gunsal.*
 import com.gs.gunsal.dataClass.*
 import com.gs.gunsal.databinding.FragmentMonthlyStatisticsBinding
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -257,30 +254,21 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
                         Log.d("getColor", "1")
                         color = ContextCompat.getColor(context!!, R.color.walk_color)
                         binding!!.monthly.addDecorator(
-                            EventDecorator(
-                                temp,
-                                context!!, color
-                            )
+                            EventDecorator(temp, context!!, color)
                         )
                     }
                     2 -> {
                         Log.d("getColor", "2")
                         color = ContextCompat.getColor(context!!, R.color.stretching_color)
                         binding!!.monthly.addDecorator(
-                            EventDecorator(
-                                temp,
-                                context!!, color
-                            )
+                            EventDecorator(temp, context!!, color)
                         )
                     }
                     3 -> {
                         Log.d("getColor", "3")
                         color = ContextCompat.getColor(context!!, R.color.select_color)
                         binding!!.monthly.addDecorator(
-                            EventDecorator(
-                                temp,
-                                context!!, color
-                            )
+                            EventDecorator(temp, context!!, color)
                         )
                     }
                 }
@@ -323,8 +311,8 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
 
 
         }
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -5,6 +5,11 @@
     android:id="@+id/news"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent"/>
 
 
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"

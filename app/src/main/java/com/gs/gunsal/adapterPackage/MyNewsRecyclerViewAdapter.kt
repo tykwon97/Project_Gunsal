@@ -69,6 +69,7 @@ class MyNewsRecyclerViewAdapter(
 
         holder.title.text = item.parseAsHtml()
         holder.image.setImageResource(image[random.nextInt(28)])
+
     }
 
     override fun getItemCount(): Int = values.size

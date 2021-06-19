@@ -23,6 +23,7 @@
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/monthly"
         android:layout_width="350dp"
+        app:mcv_showOtherDates="all"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:mcv_showOtherDates="all"
