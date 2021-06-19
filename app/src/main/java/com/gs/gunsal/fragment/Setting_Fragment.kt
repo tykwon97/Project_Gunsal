@@ -128,7 +128,9 @@ class Setting_Fragment(val userId: String) : Fragment() {
                 requireActivity().finish()
             }
             //firebaseAuth.signOut()
-        //}
+
+       // }
+
 //        googleSignInClient.revokeAccess().addOnCompleteListener(requireActivity()) {
 //            FirebaseRepository.removeUser(userId)
 //            firebaseAuth.currentUser!!.delete().
