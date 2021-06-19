@@ -290,6 +290,7 @@ object FirebaseRepository {
             val height = snapShot.child("height").value.toString()
             val weight = snapShot.child("weight").value.toString()
             val bodyData = BodyDataDetail(height = height.toDouble(), weight = weight.toDouble())
+            Log.d("FirebaseRepository", "getBodyData()")
             bodyDataListener!!.onBodyDataCaught(bodyData)
 
         }
@@ -539,6 +540,11 @@ object FirebaseRepository {
                 getTotalData(userId, date)
             }
         }
+    }
+
+    fun getTotalMonthData(userId: String, lastDay: String){
+
+
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
