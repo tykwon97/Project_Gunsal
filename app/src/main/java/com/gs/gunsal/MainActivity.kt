@@ -41,9 +41,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
-    lateinit var userId : String
-    lateinit var nickName : String
-    var timer: Timer?= null
+    lateinit var userId: String
+    lateinit var nickName: String
+    var timer: Timer? = null
 
     val textarr = arrayListOf<String>("오늘의기록", "월간통계", "건강뉴스", "스트레칭", "설정")
     val iconarr = arrayListOf<Int>(
@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         R.drawable.ic_setting
     )
     lateinit var binding: ActivityMainBinding
+
     //~~~~~~~~~~~~~~~~~~~~태윤~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //센서 연결을 위한 변수
     private var sensorManager: SensorManager? = null
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     //현재 걸음 수(출력되는 값)
     private var mSteps = 0
+
     //리스너가 등록되고 난 후의 step count(언제 지정할지 값)
     private var mCounterSteps = 0
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,22 +78,26 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         userId = intent.getStringExtra("USER_ID").toString()
 //~~~~~~~~~~~~~~~~~~~~태윤~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //저장된 값 가져오기
-        mSteps =  App.prefs1.myIndex1!!
+        mSteps = App.prefs1.myIndex1!!
         mCounterSteps = App.prefs2.myIndex2!!
-        Log.i("prefs1",mSteps.toString())
-        Log.i("prefs2",mCounterSteps.toString())
+        Log.i("prefs1", mSteps.toString())
+        Log.i("prefs2", mCounterSteps.toString())
         //binding.walknum.setText(mSteps.toString())//shared preference 받는 곳
 
         //만보기
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
             Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' NOT GRANTED");
             //ask for permission
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), TYPE_STEP_COUNTER)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), TYPE_STEP_COUNTER
+            )
             //requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PHYISCAL_ACTIVITY);
-        }else
-        {
+        } else {
             Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' GRANTED");
         }
 
@@ -103,13 +109,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
         //알림 버튼 확인시 이전 데이터 가져오기
-        val step = intent.getIntExtra("walking_msteps",-1)
-        val counterstep = intent.getIntExtra("walking_mcountersteps",-1)
+        val step = intent.getIntExtra("walking_msteps", -1)
+        val counterstep = intent.getIntExtra("walking_mcountersteps", -1)
         if (step != -1 && counterstep != -1) {
             mCounterSteps = counterstep
             mSteps = step
             //binding.walknum.setText(step.toString())
-            Log.i("str : ",step.toString())
+            Log.i("str : ", step.toString())
         }
         binding.apply {
             //walknum.setText(Integer.toString(mSteps))
@@ -121,12 +127,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private fun initNaver() {
         NaverRepository.getSearchNews("건강", ::onSearchNewsFetched, ::onError)
     }
+
     fun onSearchNewsFetched(list: List<Items>) {
-        for(n in list){
+        for (n in list) {
             titleArrayList.add(n.title)
-            linkArrayList.add(n.link)
+            linkArrayList.add(n.originallink)
             Log.i("mainLink", n.title)
-            Log.i("mainLink", n.link)
+            Log.i("mainLink", n.originallink)
         }
     }
 
@@ -163,11 +170,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         })
     }
-    fun tabbargone(){
-        binding.myTabIconview.visibility= View.GONE
+
+    fun tabbargone() {
+        binding.myTabIconview.visibility = View.GONE
     }
-    fun tabbarvisible(){
-        binding.myTabIconview.visibility= View.VISIBLE
+
+    fun tabbarvisible() {
+        binding.myTabIconview.visibility = View.VISIBLE
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~태윤~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,12 +207,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
             //파이어베이스에 저장
             //FirebaseRepository.updateWalkingData("201710561",FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
-            FirebaseRepository.updateWalkingData(userId,FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
+            FirebaseRepository.updateWalkingData(
+                userId,
+                FirebaseRepository.getCurrentDate(),
+                mSteps,
+                10.0,
+                "test"
+            )
             //값 저장해두기
             App.prefs1.myIndex1 = mSteps
             App.prefs2.myIndex2 = mCounterSteps
         }
     }
+
     //센서 정밀도가 변경되면 호출됨
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         //TODO("Not yet implemented")
@@ -213,70 +229,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onStart()
         if (stepCountSensor != null) {
             //센서의 속도 설정,만보기 센서 리스너 오브젝트를 등록
-            sensorManager?.registerListener(this, stepCountSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager?.registerListener(
+                this,
+                stepCountSensor,
+                SensorManager.SENSOR_DELAY_FASTEST
+            )
         }
+    }
 
-
-        fun waterNotification() { //물 섭취 알림부분
-            FirebaseRepository.getDrinkData("201710560",FirebaseRepository.getCurrentDate())
-            FirebaseRepository.waterDataListener = object : FirebaseRepository.OnWaterDataListener {
-                override fun onWaterDataCaught(waterDataDetail: WaterDataDetail) {
-                    val recentTime = waterDataDetail.recent_time
-                val currentTime = FirebaseRepository.getCurrentTime()
-
-                Log.i("WalkNotification:recentTIme", recentTime)
-                Log.i("WalkNotification:recentTIme", currentTime)
-
-                val recent = recentTime.split(":")
-                val current = currentTime.split(":")
-                val recenttime =
-                    recent[0].toInt() * 60 * 60 + recent[1].toInt() * 60 + recent[2].toInt()
-                val currenttime =
-                    current[0].toInt() * 60 * 60 + current[1].toInt() * 60 + current[2].toInt()
-
-                val timeInterval = currenttime - recenttime
-                Log.i("WalkNotification:timeInterval", timeInterval.toString())
-
-                if (timeInterval <= 360) { //1분이내에 또 섭취한 경우
-                    val id = "waterchannel"
-                    val name = "물 섭취 알림"
-                    val notificationChannel = NotificationChannel(
-                        id,
-                        name,
-                        NotificationManager.IMPORTANCE_DEFAULT
-                    )
-                    //속성 설정
-                    notificationChannel.enableVibration(true)//진동
-                    notificationChannel.enableLights(true) //빛
-                    notificationChannel.lightColor = Color.BLUE
-                    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
-                    var message = "이제 물 마셔야 할 시간입니다! 수분 공급해주세요! "
-
-                    val builder = NotificationCompat.Builder(applicationContext, id)
-                        .setSmallIcon(R.drawable.setting_water) //알림 이미지
-                        .setContentTitle("수분 섭취 알림")
-                        .setContentText(message)
-                        .setAutoCancel(true) //알림 클릭시 삭제 여부
-
-                    val intent = Intent(applicationContext, MainActivity::class.java)
-                    intent.putExtra("water", message) //key랑 message
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-
-                    val pendingIntent = PendingIntent.getActivity(
-                        applicationContext,
-                        2,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                    builder.setContentIntent(pendingIntent)
-
-                    val manager =
-                        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager //알림메시지를 NOTIFY
-                    manager.createNotificationChannel(notificationChannel)
-                    val notification = builder.build()
-
-                    manager.notify(2, notification)
-                }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -284,7 +244,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         //unregisterReceiver(receiver)
     }
 
-    fun waternoti(){ //수분섭취 아이콘 클릭한 경우 fragment에서 호출됨
+    fun waternoti() { //수분섭취 아이콘 클릭한 경우 fragment에서 호출됨
         if (timer != null) { //타이머가 이미 존재하는 경우 초기화 시켜주기
             timer!!.cancel()
         }
