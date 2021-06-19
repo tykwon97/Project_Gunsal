@@ -132,9 +132,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     fun onSearchNewsFetched(list: List<Items>) {
         for(n in list){
             titleArrayList.add(n.title)
-            linkArrayList.add(n.link)
+            linkArrayList.add(n.originallink)
             Log.i("mainLink", n.title)
-            Log.i("mainLink", n.link)
+            Log.i("mainLink", n.originallink)
         }
     }
 
@@ -249,7 +249,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 }
             }
         }
-        timer?.schedule(timerTask, 5000)//5초, 3600000(1시간)
+        timer?.schedule(timerTask, 3600000)//5초, 3600000(1시간)
     }
 
     fun waterNotification() {//--------------------------------------물 섭취 알림부분

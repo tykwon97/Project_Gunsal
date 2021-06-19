@@ -76,6 +76,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     }
                 }
 
+
                 (activity as MainActivity).waternoti()
 
             }
