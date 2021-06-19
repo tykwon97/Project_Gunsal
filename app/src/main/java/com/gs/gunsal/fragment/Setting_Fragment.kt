@@ -157,7 +157,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
         FirebaseRepository.userDataListener = object: FirebaseRepository.OnUserDataListener{
             override fun onUserDataCaught(userData: UserData, isFirst: Boolean){
                 binding!!.apply {
-                    userEmail.text = userData.user_id
+                    userEmail.text = userData.age.toString() + "세"
                     userName.text = userData.nick_name
                 }
             }

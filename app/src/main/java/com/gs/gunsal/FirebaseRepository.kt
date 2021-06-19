@@ -71,8 +71,8 @@ object FirebaseRepository {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////<User Data>////////////////////////////////////////////////////////////////
 
-    fun enrollUser(userId: String, nickName: String){
-        val user = UserData(userId, nickName)
+    fun enrollUser(userId: String, nickName: String, age: Int){
+        val user = UserData(userId, nickName, age)
         reference.child("users").child(userId).setValue(user)
     }
 
@@ -81,10 +81,15 @@ object FirebaseRepository {
         reference.child("walk_data").child(uid).removeValue()
         reference.child("water_data").child(uid).removeValue()
         reference.child("body_data").child(uid).removeValue()
+        reference.child("stretch_data").child(uid).removeValue()
     }
 
     fun updateUserNickName(userId: String, nickName: String){
         reference.child("users").child(userId).child("nick_name").setValue(nickName)
+    }
+
+    fun updateUserAge(userId: String, age: Int) {
+        reference.child("users").child(userId).child("age").setValue(age)
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -428,20 +433,21 @@ object FirebaseRepository {
         reference.child("users").get().addOnSuccessListener { snapShot->
             val userId = snapShot.child(user.uid).child("user_id").value.toString()
             val nickName = snapShot.child(user.uid).child("nick_name").value.toString()
+            val age = snapShot.child(user.uid).child("age").value.toString()
             Log.d("getUserInfo", "$userId, $nickName")
             if(userId == "null" || nickName == "null"){
-                enrollUser(user.uid, user.displayName.toString())
-                val userData = UserData(userId, nickName)
+                enrollUser(user.uid, user.displayName.toString(), 0)
+                val userData = UserData(userId, nickName, age.toInt())
                 userDataListener!!.onUserDataCaught(userData, true)
             }
             else {
                 Log.d("getUserInfo else", "$userId, $nickName")
-                val userData = UserData(userId, nickName)
+                val userData = UserData(userId, nickName, age.toInt())
                 userDataListener!!.onUserDataCaught(userData, false)
             }
         }.addOnFailureListener {
-            enrollUser(user.uid, user.displayName.toString())
-            val userData = UserData(user.uid, user.displayName!!)
+            enrollUser(user.uid, user.displayName.toString(), 0)
+            val userData = UserData(user.uid, user.displayName!!, 0)
             userDataListener!!.onUserDataUncaught(user)
         }
     }
@@ -450,8 +456,9 @@ object FirebaseRepository {
         reference.child("users").get().addOnSuccessListener { snapShot->
             val userId = snapShot.child(userId).child("user_id").value.toString()
             val nickName = snapShot.child(userId).child("nick_name").value.toString()
+            val age = snapShot.child(userId).child("age").value.toString().toInt()
             Log.d("getUserInfo", "$userId, $nickName")
-            val userData = UserData(userId, nickName)
+            val userData = UserData(userId, nickName, age)
             userDataListener!!.onUserDataCaught(userData, false)
         }
     }
@@ -469,6 +476,7 @@ object FirebaseRepository {
             val height = bodySnapShot.child("height").value.toString()
             val weight = bodySnapShot.child("weight").value.toString()
             val nickName = userSnapShot.child("nick_name").value.toString()
+            val age = userSnapShot.child("age").value.toString()
             val kcalConsumed = walkSnapShot.child("kcal_consumed").value.toString()
             val walkMemo = walkSnapShot.child("memo").value.toString()
             val stepCount = walkSnapShot.child("step_count").value.toString()
@@ -500,7 +508,7 @@ object FirebaseRepository {
             if(nullIndexArray.size == 0) {
                 Log.d("getTotalData", "dataLoad SUCCESS")
                 val bodyData = BodyDataDetail(weight = weight.toDouble(), height = height.toDouble())
-                val userData = UserData(userId, nickName)
+                val userData = UserData(userId, nickName, age.toInt())
                 val waterData = WaterDataDetail(quantity.toInt(), drinkMemo, recentTime)
                 val walkData = WalkDataDetail(stepCount.toInt(), kcalConsumed.toDouble(), walkMemo)
                 val stretchData = StretchDataDetail(stretchTime.toInt())
@@ -633,6 +641,7 @@ object FirebaseRepository {
         //Log.d("TIME::", time)
         return time
     }
+
 
 
 

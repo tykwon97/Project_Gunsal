@@ -136,7 +136,7 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onUserDataUncaught(user: FirebaseUser) {
                     Log.i("toMainActivity-> onUserDataUncaught", "success")
-                    FirebaseRepository.enrollUser(user.uid.toString(), user.displayName.toString())
+                    FirebaseRepository.enrollUser(user.uid.toString(), user.displayName.toString(), 0)
                     FirebaseRepository.getTotalData(user.uid, FirebaseRepository.getCurrentDate())
                     val intent = Intent(this@LoginActivity, ProfileActivity::class.java)
                     intent.putExtra("USER_ID", user.uid)
