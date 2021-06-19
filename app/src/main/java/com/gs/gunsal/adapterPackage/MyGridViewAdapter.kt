@@ -9,7 +9,7 @@ import com.gs.gunsal.fragment.MyFilterData
 
 class MyGridViewAdapter(var values: ArrayList<MyFilterData>
 ) : RecyclerView.Adapter<MyGridViewAdapter.ViewHolder>() {
-
+    //건강뉴스 카테고리 리스트 어뎁터
     var mListener: OnItemClickListener? = null
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,7 +37,7 @@ class MyGridViewAdapter(var values: ArrayList<MyFilterData>
             return super.toString() + " '" + title.text + "'"
         }
         init{
-            binding.item.setOnClickListener {
+            binding.item.setOnClickListener {   //카테고리 클릭 시 이벤트
                 mListener?.onItemClick(this, adapterPosition, values[adapterPosition])
             }
         }

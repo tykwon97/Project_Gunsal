@@ -13,8 +13,8 @@ import java.util.*
 
 class MyNewsRecyclerViewAdapter(
     private val values: List<String>
-) : RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder>() {
-    var image = listOf<Int>(
+) : RecyclerView.Adapter<MyNewsRecyclerViewAdapter.ViewHolder>() {   //건강뉴스 recyclerview 어뎁터
+    var image = listOf<Int>(//건강뉴스 백그라운드 이미지
         R.drawable.health_1,
         R.drawable.health_2,
         R.drawable.health_3,
