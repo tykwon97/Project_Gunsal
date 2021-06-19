@@ -99,7 +99,7 @@ class Intro_Activity : AppCompatActivity() {
                 }
 
                 override fun onUserDataUncaught(user: FirebaseUser) {
-                    FirebaseRepository.enrollUser(user.uid.toString(), user.displayName.toString())
+                    FirebaseRepository.enrollUser(user.uid.toString(), user.displayName.toString(), 0)
                     FirebaseRepository.getTotalData(user.uid, FirebaseRepository.getCurrentDate())
                     FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
                         override fun onTotalDataCaught(

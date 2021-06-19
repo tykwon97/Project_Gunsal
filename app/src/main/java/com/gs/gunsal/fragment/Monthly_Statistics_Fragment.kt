@@ -70,7 +70,7 @@ class Monthly_Statistics_Fragment(val userId: String) : Fragment() {
             monthlyTextColor.bringToFront()
             monthly.state().edit()
                 .setMinimumDate(CalendarDay.from(2021, 0, 1))
-                .setMaximumDate(CalendarDay.from(year, month - 1, cal.getActualMaximum(Calendar.DAY_OF_MONTH)))
+                .setMaximumDate(CalendarDay.from(year, month - 1, day))
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit()
             monthly.setOnDateChangedListener { widget, date, selected ->
