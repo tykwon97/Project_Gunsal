@@ -13,7 +13,7 @@ import com.gs.gunsal.databinding.FragmentHealthNewsBinding
 import com.gs.gunsal.databinding.StretchingPlayerItemBinding
 
 class MyStretChingAdapter() : RecyclerView.Adapter<MyStretChingAdapter.ViewHolder>() {
-
+    //Stretching web View 어뎁터
     var url: List<String> = listOf(
         "https://www.youtube.com/embed/t70t-sklypk",
         "https://www.youtube.com/embed/0L5gAT1fJaM",
@@ -39,11 +39,10 @@ class MyStretChingAdapter() : RecyclerView.Adapter<MyStretChingAdapter.ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.webView.webChromeClient = WebChromeClient()
-        holder.webView.settings.apply {
+        holder.webView.settings.apply {   //데이터 생성과 동시에 로드
             javaScriptEnabled = true
             pluginState = WebSettings.PluginState.ON
             useWideViewPort = true
-
             loadWithOverviewMode = true
         }
         holder.webView.loadUrl(url[position])

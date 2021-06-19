@@ -47,11 +47,12 @@ class Health_News_Fragment : Fragment() {
     ): View? {
         binding = FragmentHealthNewsListBinding.inflate(layoutInflater, container, false)
         binding2 = NewsKeywordItemBinding.inflate(layoutInflater, container, false)
-        titleArrayList.addAll((activity as MainActivity).titleArrayList)
+
+        titleArrayList.addAll((activity as MainActivity).titleArrayList)  //초기 시작 시 받아온 뉴스를 list에 삽입
         Log.i("list", titleArrayList.toString())
         adapter = MyNewsRecyclerViewAdapter(titleArrayList)
         var linkArray = ArrayList<String>()
-        linkArray.addAll((activity as MainActivity).linkArrayList)
+        linkArray.addAll((activity as MainActivity).linkArrayList)  //초기 시작 시 받아온 뉴스 Link list에 삽입
         adapter.itemOnClickListener = object : MyNewsRecyclerViewAdapter.OnItemClickListener{
             override fun OnItemClick(
                 holder: RecyclerView.ViewHolder,
@@ -64,15 +65,7 @@ class Health_News_Fragment : Fragment() {
         }
         binding!!.list.adapter = adapter
 
-        binding!!.newsView.settings.apply {
-            javaScriptEnabled = true
-            setAppCacheEnabled(true)
-            pluginState = WebSettings.PluginState.ON
-            useWideViewPort = true
-            loadWithOverviewMode = true
-        }
-        binding!!.newsView.webChromeClient = WebChromeClient()
-        binding!!.fab.setOnClickListener {
+        binding!!.fab.setOnClickListener {    //flaoting 버튼 클릭시 카테고리 리스트 Visible
             if (binding!!.gridrecyclerview.visibility == View.GONE) {
                 binding!!.color.visibility = View.VISIBLE
                 searchString = ArrayList()
@@ -96,7 +89,7 @@ class Health_News_Fragment : Fragment() {
 
 
         val myadapter = MyGridViewAdapter(filterData)
-        myadapter.mListener = object : MyGridViewAdapter.OnItemClickListener {
+        myadapter.mListener = object : MyGridViewAdapter.OnItemClickListener { //카테고리 리스트 활성화에 따른 멀티쿼리 검색문 생성 및 삭제, 색변화
             override fun onItemClick(
                 v: MyGridViewAdapter.ViewHolder?,
                 pos: Int,
@@ -116,7 +109,7 @@ class Health_News_Fragment : Fragment() {
             }
 
         }
-        binding!!.filter.setOnClickListener {
+        binding!!.filter.setOnClickListener {  //선택한 카테고리에 따른 뉴스 정보 재 쿼리
             var search:String = ""
             searchString!!.forEach {
                 search+=it+","
@@ -135,11 +128,7 @@ class Health_News_Fragment : Fragment() {
         return binding!!.root
     }
 
-    private fun initNaver() {
-        NaverRepository.getSearchNews("건강", ::onSearchNewsFetched, ::onError)
-    }
-
-    fun onReSearchNewsFetched(list: List<Items>){
+    fun onReSearchNewsFetched(list: List<Items>){  //서칭 성공시 실행할 함수, 뷰 아이템 재배열
         titleArrayList.clear()
         for(n in list){
             titleArrayList.add(n.title)
@@ -156,36 +145,15 @@ class Health_News_Fragment : Fragment() {
         }
         adapter.notifyDataSetChanged()
     }
-    fun onSearchNewsFetched(list: List<Items>) {
-        titleArrayList = ArrayList<String>()
-        for(n in list){
-            titleArrayList.add(n.title)
-        }
-        adapter = MyNewsRecyclerViewAdapter(titleArrayList)
-
-        adapter.itemOnClickListener = object : MyNewsRecyclerViewAdapter.OnItemClickListener{
-            override fun OnItemClick(
-                holder: RecyclerView.ViewHolder,
-                view: View,
-                data: String,
-                position: Int
-            ) {
-                changeWebView(list[position].originallink)
-            }
-        }
-        binding!!.list.adapter = adapter
-    }
-
     fun onError() {
         Log.i("error", "error")
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context) {   //카테고리뷰 띄운채 탭바 이동시 카테고리 삭제해주는 코드
         super.onAttach(context)
         callback = object :OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 Log.d("frag", "back")
-                binding!!.newsView.visibility = View.GONE
                 binding!!.list.visibility = View.VISIBLE
                 binding!!.fab.visibility = View.VISIBLE
             }
@@ -194,9 +162,7 @@ class Health_News_Fragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
     }
-    fun changeWebView(link:String){
-        binding!!.newsView.visibility = View.VISIBLE
-        binding!!.newsView.loadUrl(link)
+    fun changeWebView(link:String){   //webViewChange
         binding!!.list.visibility = View.GONE
         binding!!.fab.visibility = View.GONE
         binding!!.gridrecyclerview.visibility = View.GONE

@@ -18,7 +18,7 @@ class MyTabFragStateAdapter(fragmentActivity: FragmentActivity, private val user
         return 5
     }
 
-    override fun createFragment(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {  //뷰페이저 페이지 전환
         return when (position) {
             0 -> Today_Viewer_Fragment(userId)
             1 -> Monthly_Statistics_Fragment()
