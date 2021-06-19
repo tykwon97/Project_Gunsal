@@ -114,6 +114,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding.apply {
             //walknum.setText(Integer.toString(mSteps))
         }
+        //service작업 시작
+        val intent = Intent(this, WalkingService::class.java)
+        intent.putExtra("USER_ID", userId)
+        intent.putExtra("walking", mSteps)
+        intent.putExtra("counterstep", mCounterSteps)
+        startService(intent)
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         init()
     }
@@ -259,7 +265,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         var message = "이제 물 마셔야 할 시간입니다! 수분 공급해주세요! "
 
         val builder = NotificationCompat.Builder(applicationContext, id)
-            .setSmallIcon(R.drawable.today_water_icon) //알림 이미지
+            .setSmallIcon(R.drawable.today_icon) //알림 이미지
             .setContentTitle("수분 섭취 알림")
             .setContentText(message)
             .setAutoCancel(true) //알림 클릭시 삭제 여부
