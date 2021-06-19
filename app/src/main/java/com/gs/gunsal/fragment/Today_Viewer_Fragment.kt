@@ -315,7 +315,8 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
 
                     val walkkcal = (walkData.step_count.toFloat()*33)/1000.0.toFloat()
                     val strechkcal = result*3.toFloat()
-                    val sumkcal = Math.round((walkkcal+strechkcal)*10)/10f
+                    val waterKcal = (waterData.quantity / 1000.0 * 50).toFloat()
+                    val sumkcal = Math.round((walkkcal+strechkcal + waterKcal)*10)/10f
                     binding!!.todayKcalNumber.text=sumkcal.toString()
                 }
             }
