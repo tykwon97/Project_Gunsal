@@ -435,7 +435,7 @@ object FirebaseRepository {
             val nickName = snapShot.child(user.uid).child("nick_name").value.toString()
             val age = snapShot.child(user.uid).child("age").value.toString()
             Log.d("getUserInfo", "$userId, $nickName")
-            if(userId == "null" || nickName == "null"){
+            if(userId == "null" || nickName == "null" || age == "null"){
                 enrollUser(user.uid, user.displayName.toString(), 0)
                 val userData = UserData(userId, nickName, age.toInt())
                 userDataListener!!.onUserDataCaught(userData, true)

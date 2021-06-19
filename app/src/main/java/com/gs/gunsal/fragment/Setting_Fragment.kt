@@ -126,8 +126,10 @@ class Setting_Fragment(val userId: String) : Fragment() {
     private fun revokeAccess() { //회원탈퇴
         // Firebase sign out
         //googleSignInClient.signOut().addOnCompleteListener {
+            firebaseAuth.signOut()
             firebaseAuth.currentUser!!.delete().addOnCompleteListener {
                 FirebaseRepository.removeUser(userId)
+
                 val intent = Intent(requireActivity(), LoginActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
