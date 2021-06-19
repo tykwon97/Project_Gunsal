@@ -1,5 +1,6 @@
 package com.gs.gunsal
 
+import android.Manifest
 import android.hardware.Sensor
 import android.hardware.Sensor.TYPE_STEP_COUNTER
 import android.hardware.SensorEvent
@@ -11,12 +12,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -33,10 +36,14 @@ import com.ms129.stockPrediction.naverAPI.Items
 import com.ms129.stockPrediction.naverAPI.NaverRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
     lateinit var userId : String
     lateinit var nickName : String
+    var timer: Timer?= null
+
     val textarr = arrayListOf<String>("오늘의기록", "월간통계", "건강뉴스", "스트레칭", "설정")
     val iconarr = arrayListOf<Int>(
         R.drawable.ic_home,
@@ -75,17 +82,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         //binding.walknum.setText(mSteps.toString())//shared preference 받는 곳
 
         //만보기
-//        if(ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
-//            Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' NOT GRANTED");
-//            //ask for permission
-//            ActivityCompat.requestPermissions(this,
-//                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), TYPE_STEP_COUNTER)
-//            //requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PHYISCAL_ACTIVITY);
-//        }else
-//        {
-//            Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' GRANTED");
-//        }
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){
+            Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' NOT GRANTED");
+            //ask for permission
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), TYPE_STEP_COUNTER)
+            //requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PHYISCAL_ACTIVITY);
+        }else
+        {
+            Log.d("TAG", "PERMISSION 'ACTIVITY_RECOGNITION' GRANTED");
+        }
+
         //센서 연결[걸음수 센서를 이용한 흔듬 감지]
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager?
         stepCountSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
@@ -104,11 +112,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
         binding.apply {
             //walknum.setText(Integer.toString(mSteps))
-//            resetBtn.setOnClickListener {
-//                mSteps = 0
-//                mCounterSteps = 0
-//                //walknum.setText(Integer.toString(mSteps))
-//            }
         }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         init()
@@ -184,12 +187,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             //service작업 시작해봄 ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ
             val intent = Intent(this, WalkingService::class.java)
+            intent.putExtra("USER_ID", userId)
             intent.putExtra("walking", mSteps)
             intent.putExtra("counterstep", mCounterSteps)
             startService(intent)
 
             //파이어베이스에 저장
-            FirebaseRepository.updateWalkingData("201710561",FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
+            //FirebaseRepository.updateWalkingData("201710561",FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
+            FirebaseRepository.updateWalkingData(userId,FirebaseRepository.getCurrentDate(),mSteps,10.0,"test")
             //값 저장해두기
             App.prefs1.myIndex1 = mSteps
             App.prefs2.myIndex2 = mCounterSteps
@@ -214,4 +219,60 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         //unregisterReceiver(receiver)
     }
 
+    fun waternoti(){ //수분섭취 아이콘 클릭한 경우 fragment에서 호출됨
+        if (timer != null) { //타이머가 이미 존재하는 경우 초기화 시켜주기
+            timer!!.cancel()
+        }
+        timer = Timer()
+        //FirebaseRepository.addDrinkData(userId, 250, "250ml 추가") //물 섭취 기록하기
+        //Toast.makeText(applicationContext, "250ml 추가", Toast.LENGTH_SHORT).show()
+        val timerTask = object : TimerTask() {
+            override fun run() { //TimerTask에서 반드시 override 해줘야됨!
+                waterNotification()
+            }
+        }
+        timer?.schedule(timerTask, 5000)//5초, 3600000(1시간)
+    }
+
+    fun waterNotification() {//--------------------------------------물 섭취 알림부분
+        val id = "waterchannel"
+        val name = "물 섭취 알림"
+        val notificationChannel = NotificationChannel(
+            id,
+            name,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        //속성 설정
+        notificationChannel.enableVibration(true)//진동
+        notificationChannel.enableLights(true) //빛
+        notificationChannel.lightColor = Color.BLUE
+        notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        var message = "이제 물 마셔야 할 시간입니다! 수분 공급해주세요! "
+
+        val builder = NotificationCompat.Builder(applicationContext, id)
+            .setSmallIcon(R.drawable.today_water_icon) //알림 이미지
+            .setContentTitle("수분 섭취 알림")
+            .setContentText(message)
+            .setAutoCancel(true) //알림 클릭시 삭제 여부
+
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.putExtra("USER_ID", userId)
+        intent.putExtra("water", message) //key랑 message
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            2,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        builder.setContentIntent(pendingIntent)
+
+        val manager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager //알림메시지를 NOTIFY
+        manager.createNotificationChannel(notificationChannel)
+        val notification = builder.build()
+
+        manager.notify(2, notification)
+    }
 }
