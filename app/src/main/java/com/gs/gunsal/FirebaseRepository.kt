@@ -62,6 +62,11 @@ object FirebaseRepository {
     }
     var totalDataListener:OnTotalDataListener ?= null
 
+    interface OnTotalMonthListener{
+        fun onTotalMonthCaught(ratingArray: ArrayList<Rating>)
+    }
+    var totalMonthListener: OnTotalMonthListener ?= null
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////<User Data>////////////////////////////////////////////////////////////////
@@ -543,7 +548,71 @@ object FirebaseRepository {
     }
 
     fun getTotalMonthData(userId: String, lastDay: String){
+        reference.get().addOnSuccessListener { snapShot->
+            val splitt = lastDay.split("-")
+            val year = splitt[0]
+            val month = splitt[1]
+            var day = 0
+            if(splitt[2][0] == '0')
+                day = splitt[2][1].toInt()
+            else
+                day = splitt[2].toInt()
+            val ratingArray = ArrayList<Rating>()
+            for(i in 1 until (day + 1)){
+                var tempDate = ""
+                if(i < 10) {
+                    tempDate = "$year-$month-0${i}"
+                    Log.i("tempData", tempDate)
+                }
+                else
+                    tempDate = "$year-$month-${i}"
+                val userSnapShot = snapShot.child("users").child(userId)
+                val waterSnapShot = snapShot.child("water_data").child(userId).child(tempDate)
+                val walkSnapShot = snapShot.child("walk_data").child(userId).child(tempDate)
+                val stretchSnapShot = snapShot.child("stretch_data").child(userId).child(tempDate)
+                val drinkQuantity = waterSnapShot.child("quantity").value.toString()
+                val stepCount = walkSnapShot.child("step_count").value.toString()
+                val stretchTime = stretchSnapShot.child("time").value.toString()
+                val dataArray = ArrayList<String>()
+                val nullIndexArray = ArrayList<Int>()
+                dataArray.add(drinkQuantity)
+                dataArray.add(stepCount)
+                dataArray.add(stretchTime)
+                var j = 0
+                for(data in dataArray){
+                    if(data == "NULL" || data == "null"){
+                        nullIndexArray.add(j)
+                    }
+                    j += 1
+                }
+                if(nullIndexArray.size == 0){
+                    var score = 0
+                    if(stepCount.toInt() >= 10000) score += 1
+                    if(drinkQuantity.toInt() >= 2000) score += 1
+                    if(stretchTime.toInt() >= 900) score += 1
+                    var rate = 0
+                    if(score == 3) rate = 3
+                    else if(score in 1..2) rate = 2
+                    else rate = 1
+                    if(stepCount.toInt() == 0 && drinkQuantity.toInt() == 0 && stretchTime.toInt() == 0)
+                        rate = 0
 
+                    ratingArray.add(Rating(tempDate, rate))
+                }
+                else{
+//                    for(index in nullIndexArray){
+//                        when(index){
+//                            0 -> updateDrinkData(userId,tempDate, "00:00:01", 0, "") // drink
+//                            1 -> updateWalkingData(userId, tempDate, 0, 0.0, "") // Walk
+//                            2 -> updateStretchData(userId, tempDate, 0)
+//                        }
+//                    }
+//                    getTotalMonthData(userId, lastDay)
+                    ratingArray.add(Rating(tempDate, 0))
+                }
+            }
+            totalMonthListener!!.onTotalMonthCaught(ratingArray)
+        }
 
     }
 
