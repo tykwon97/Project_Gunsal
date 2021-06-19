@@ -113,6 +113,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
                 val intent = Intent(requireActivity(), LoginActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
+                Toast.makeText(requireContext(), "로그아웃되었습니다", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -124,6 +125,7 @@ class Setting_Fragment(val userId: String) : Fragment() {
             val intent = Intent(requireContext().applicationContext, LoginActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
+            Toast.makeText(requireContext(), "회원탈퇴에 성공했습니다", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -166,7 +168,6 @@ class Setting_Fragment(val userId: String) : Fragment() {
                     weightTextView.text = "${bodyDataDetail.weight}kg"
                     heightTextView.text = "${bodyDataDetail.height}cm"
                     Log.i("body", bodyDataDetail.weight.toString())
-
                 }
             }
         }
