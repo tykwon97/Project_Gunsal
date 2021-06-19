@@ -2,6 +2,7 @@ package com.gs.gunsal.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +49,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
 
             val translatedown = AnimationUtils.loadAnimation(getContext(), R.anim.translate_down)
             val translateup = AnimationUtils.loadAnimation(getContext(),R.anim.translate_up)
+
             todayWater.setOnClickListener{
                 if(!isPageOpenStrech&&!isPageOpenWalk){
                     if(!isPageOpenWater){
@@ -65,6 +67,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                                 slideViewerWater.visibility=View.VISIBLE
                                 todayBlackBackground.visibility=View.VISIBLE
                                 slideViewerWater.startAnimation(translateup)
+
                             }
                         }
                     }
@@ -79,6 +82,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     slideViewerWater.startAnimation(translatedown)
                     (activity as MainActivity).tabbarvisible()
                     isPageOpenWater=false
+                    initData()
                 }
             }
 
@@ -116,6 +120,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     slideViewerWalk.startAnimation(translatedown)
                     (activity as MainActivity).tabbarvisible()
                     isPageOpenWalk=false
+                    initData()
                 }
             }
 
@@ -153,6 +158,7 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     slideViewerStrech.startAnimation(translatedown)
                     (activity as MainActivity).tabbarvisible()
                     isPageOpenStrech=false
+                    initData()
                 }
             }
         }
@@ -162,6 +168,75 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
 
     private fun initData() {
         val today = FirebaseRepository.getCurrentDate()
+        binding!!.apply {
+            val splitdate = today.split("-")
+            todayTranslateUpDateWaterYear.text=splitdate[0]
+            todayTranslateUpDateStrechYear.text=splitdate[0]
+            todayTranslateUpDateWalkYear.text=splitdate[0]
+            when(splitdate[1].toInt()){
+                1->{
+                    todayTranslateUpDateWater.text="January"
+                    todayTranslateUpDateWalk.text="January"
+                    todayTranslateUpDateStrech.text="January"
+                }
+                2->{
+                    todayTranslateUpDateWater.text="February"
+                    todayTranslateUpDateWalk.text="February"
+                    todayTranslateUpDateStrech.text="February"
+                }
+                3->{
+                    todayTranslateUpDateWater.text="March"
+                    todayTranslateUpDateWalk.text="March"
+                    todayTranslateUpDateStrech.text="March"
+                }
+                4->{
+                    todayTranslateUpDateWater.text="April"
+                    todayTranslateUpDateWalk.text="April"
+                    todayTranslateUpDateStrech.text="April"
+                }
+                5->{
+                    todayTranslateUpDateWater.text="May"
+                    todayTranslateUpDateWalk.text="May"
+                    todayTranslateUpDateStrech.text="May"
+                }
+                6->{
+                    todayTranslateUpDateWater.text="June"
+                    todayTranslateUpDateWalk.text="June"
+                    todayTranslateUpDateStrech.text="June"
+                }
+                7->{
+                    todayTranslateUpDateWater.text="July"
+                    todayTranslateUpDateWalk.text="July"
+                    todayTranslateUpDateStrech.text="July"
+                }
+                8->{
+                    todayTranslateUpDateWater.text="August"
+                    todayTranslateUpDateWalk.text="August"
+                    todayTranslateUpDateStrech.text="August"
+                }
+                9->{
+                    todayTranslateUpDateWater.text="September"
+                    todayTranslateUpDateWalk.text="September"
+                    todayTranslateUpDateStrech.text="September"
+                }
+                10->{
+                    todayTranslateUpDateWater.text="October"
+                    todayTranslateUpDateWalk.text="October"
+                    todayTranslateUpDateStrech.text="October"
+                }
+                11->{
+                    todayTranslateUpDateWater.text="November"
+                    todayTranslateUpDateWalk.text="November"
+                    todayTranslateUpDateStrech.text="November"
+                }
+                12->{
+                    todayTranslateUpDateWater.text="December"
+                    todayTranslateUpDateWalk.text="December"
+                    todayTranslateUpDateStrech.text="December"
+                }
+            }
+        }
+
         FirebaseRepository.getTotalData(userId, today)
         //Log.e("today", today)
         FirebaseRepository.totalDataListener = object: FirebaseRepository.OnTotalDataListener{
@@ -203,13 +278,23 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
                     val secResult = Math.round(sec * 10) / 10f
                     val result = minutes + secResult
                     todayStrechNumber.text = "$result"
+                    if(result.toFloat()>=15.0){
+                        binding!!.todayStrechBarColor.width=657
+                    }else{
+                        binding!!.todayStrechBarColor.width=((result.toFloat()/15.0)*656.25).toInt()
+                    }
+
+                    val walkkcal = (walkData.step_count.toFloat()*33)/1000.0.toFloat()
+                    val strechkcal = result*3.toFloat()
+                    val sumkcal = Math.round((walkkcal+strechkcal)*10)/10f
+                    binding!!.todayKcalNumber.text=sumkcal.toString()
                 }
             }
         }
 
     }
-    private fun setChartViewWalk(weekWalkData: ArrayList<Int>, dayOfWeek: Int){
-        var walk_week= binding?.barchartWalkWeek
+    private fun setChartViewWalk(weekWalkData: ArrayList<Int>, dayOfWeek: Int) {
+        var walk_week = binding?.barchartWalkWeek
         if (walk_week != null) {
             setWeek(walk_week, weekWalkData, dayOfWeek, 1)
         }
@@ -322,8 +407,21 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
         }
 
         for(i in 0 until valueList.size){
-            val barEntry=BarEntry((i+1).toFloat(),valueList[i].toFloat())
-            entries.add(barEntry)
+            when(type){
+                1->{
+                    val barEntry=BarEntry((i+1).toFloat(),((valueList[i].toFloat()/10000.0)*100.0).toFloat())
+                    entries.add(barEntry)
+                }
+                2->{
+                    val barEntry=BarEntry((i+1).toFloat(),((valueList[i].toFloat()/2000.0)*100.0).toFloat())
+                    entries.add(barEntry)
+                }
+                3->{
+                    val barEntry=BarEntry((i+1).toFloat(),((valueList[i].toFloat()/900.0)*100.0).toFloat())
+                    entries.add(barEntry)
+                }
+            }
+
         }
 
         val barDataSet= BarDataSet(entries,title)
@@ -360,10 +458,13 @@ class Today_Viewer_Fragment(val userId: String) : Fragment() {
         xAxis.setDrawAxisLine(false)//X축 숨기기
         xAxis.setDrawGridLines(false)
 
+
         val leftAxis: YAxis = barChart.getAxisLeft()
         leftAxis.setDrawAxisLine(false)
         leftAxis.setDrawGridLines(false)
         leftAxis.textColor = Color.WHITE
+        leftAxis.setAxisMaxValue(100.0f)
+        leftAxis.setAxisMinValue(0.0f)
 
         val rightAxis: YAxis = barChart.getAxisRight()
         rightAxis.setDrawAxisLine(false)

@@ -10,29 +10,36 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_custom_news">
 
         <ImageView
             android:id="@+id/news_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="fitXY"
-            />
+            android:background="@drawable/bg_custom_news"/>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#80000000"
-            />
+            android:background="@drawable/bg_custom_news"/>
 
         <TextView
             android:id="@+id/news_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/gmarketsans_bold"
-            android:textSize="10pt"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:textColor="@color/white"
+            android:textScaleX="0.85"
+            android:textSize="20sp"
+            android:letterSpacing="0.02"
+            android:textStyle="bold"
             android:gravity="left"
             android:layout_gravity="bottom"
-            android:textColor="@color/white" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="20dp"/>
 
     </FrameLayout>
 </LinearLayout>

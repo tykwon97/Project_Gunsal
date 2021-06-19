@@ -11,10 +11,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.gs.gunsal.dataClass.BodyDataDetail
-import com.gs.gunsal.dataClass.UserData
-import com.gs.gunsal.dataClass.WalkDataDetail
-import com.gs.gunsal.dataClass.WaterDataDetail
+import com.gs.gunsal.dataClass.*
 import com.gs.gunsal.databinding.ActivityIntroBinding
 
 class Intro_Activity : AppCompatActivity() {
@@ -101,8 +98,10 @@ class Intro_Activity : AppCompatActivity() {
                             userData: UserData,
                             bodyData: BodyDataDetail,
                             waterData: WaterDataDetail,
-                            walkData: WalkDataDetail
+                            walkData: WalkDataDetail,
+                            stretchData: StretchDataDetail
                         ) {
+
                         }
                     }
                     val intent = Intent(this@Intro_Activity, ProfileActivity::class.java)

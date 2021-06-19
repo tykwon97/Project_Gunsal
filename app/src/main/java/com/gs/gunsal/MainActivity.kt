@@ -166,16 +166,16 @@ class MainActivity : AppCompatActivity() {
                 manager.notify(1, notification)
             }
 
-            override fun onWalkListCaught(newWalkData: ArrayList<NewWalkData>) {
+            fun onWalkListCaught(newWalkData: ArrayList<NewWalkData>) {
+                }
             }
         }
-    }
 
-    fun waterNotification() { //물 섭취 알림부분
-        FirebaseRepository.getDrinkData("201710560",FirebaseRepository.getCurrentDate())
-        FirebaseRepository.waterDataListener = object : FirebaseRepository.OnWaterDataListener {
-            override fun onWaterDataCaught(waterDataDetail: WaterDataDetail) {
-                val recentTime = waterDataDetail.recent_time
+        fun waterNotification() { //물 섭취 알림부분
+            FirebaseRepository.getDrinkData("201710560",FirebaseRepository.getCurrentDate())
+            FirebaseRepository.waterDataListener = object : FirebaseRepository.OnWaterDataListener {
+                override fun onWaterDataCaught(waterDataDetail: WaterDataDetail) {
+                    val recentTime = waterDataDetail.recent_time
                 val currentTime = FirebaseRepository.getCurrentTime()
 
                 Log.i("WalkNotification:recentTIme", recentTime)

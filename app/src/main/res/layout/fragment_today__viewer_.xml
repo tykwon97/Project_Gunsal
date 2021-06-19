@@ -343,7 +343,9 @@
         android:background="@drawable/bg_custom_pageslide"
         android:orientation="vertical"
         android:visibility="gone">
-
+        <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/today_translate_up_date_water"
             android:layout_width="wrap_content"
@@ -352,13 +354,28 @@
             android:layout_marginTop="35sp"
             android:fontFamily="@font/gmarketsans_medium"
             android:letterSpacing="0.05"
-            android:text="May 2021"
+            android:text="May"
             android:textColor="#000000"
             android:textFontWeight="400"
             android:textScaleX="0.85"
             android:textSize="23sp"
             android:textStyle="bold" />
-
+        <TextView
+            android:id="@+id/today_translate_up_date_water_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginTop="35sp"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:layout_toRightOf="@+id/today_translate_up_date_water"
+            android:letterSpacing="0.05"
+            android:text="2021"
+            android:textColor="#000000"
+            android:textFontWeight="400"
+            android:textScaleX="0.85"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/today_water_detail"
@@ -436,7 +453,7 @@
                 android:fontFamily="@font/gmarketsans_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:letterSpacing="2.635"
+                android:letterSpacing="2.638"
                 android:text="월화수목금토일"/>
         </RelativeLayout>
 
@@ -475,7 +492,9 @@
         android:background="@drawable/bg_custom_pageslide"
         android:orientation="vertical"
         android:visibility="gone">
-
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <TextView
             android:id="@+id/today_translate_up_date_walk"
             android:layout_width="wrap_content"
@@ -484,12 +503,28 @@
             android:layout_marginTop="35sp"
             android:fontFamily="@font/gmarketsans_medium"
             android:letterSpacing="0.05"
-            android:text="May 2021"
+            android:text="May"
             android:textColor="#000000"
             android:textFontWeight="400"
             android:textScaleX="0.85"
             android:textSize="23sp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/today_translate_up_date_walk_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginTop="35sp"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:layout_toRightOf="@+id/today_translate_up_date_walk"
+            android:letterSpacing="0.05"
+            android:text="2021"
+            android:textColor="#000000"
+            android:textFontWeight="400"
+            android:textScaleX="0.85"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+        </RelativeLayout>
 
 
         <RelativeLayout
@@ -568,7 +603,7 @@
                 android:fontFamily="@font/gmarketsans_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:letterSpacing="2.635"
+                android:letterSpacing="2.638"
                 android:text="월화수목금토일"/>
         </RelativeLayout>
 
@@ -606,7 +641,9 @@
         android:background="@drawable/bg_custom_pageslide"
         android:orientation="vertical"
         android:visibility="gone">
-
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <TextView
             android:id="@+id/today_translate_up_date_strech"
             android:layout_width="wrap_content"
@@ -615,13 +652,29 @@
             android:layout_marginTop="35sp"
             android:fontFamily="@font/gmarketsans_medium"
             android:letterSpacing="0.05"
-            android:text="May 2021"
+            android:text="May"
             android:textColor="#000000"
             android:textFontWeight="400"
             android:textScaleX="0.85"
             android:textSize="23sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/today_translate_up_date_strech_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_marginTop="35sp"
+            android:fontFamily="@font/gmarketsans_medium"
+            android:layout_toRightOf="@+id/today_translate_up_date_strech"
+            android:letterSpacing="0.05"
+            android:text="2021"
+            android:textColor="#000000"
+            android:textFontWeight="400"
+            android:textScaleX="0.85"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/today_strech_detail"
@@ -699,7 +752,7 @@
                 android:fontFamily="@font/gmarketsans_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:letterSpacing="2.635"
+                android:letterSpacing="2.638"
                 android:text="월화수목금토일"/>
         </RelativeLayout>
 
