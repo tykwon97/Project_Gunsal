@@ -71,7 +71,7 @@ class WalkingService : Service() {
         val builder = NotificationCompat.Builder(applicationContext, id)
             //.setContent(contentsView)
             .setProgress(PROGRESS_MAX, PROGRESS_CURRENT!!, false) //만보기 progress bar
-            .setSmallIcon(R.drawable.health_8) //알림 이미지
+            .setSmallIcon(R.drawable.today_walk_icon) //알림 이미지
             .setContentTitle("만보기")
             .setContentText(message)
             .setOngoing(true); //상태바에 고정
